@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+src/backend/.venv/
+src/backend/*.egg-info/
+src/backend/.coverage
+
+# Node/Vite
+src/frontend/node_modules/
+src/frontend/dist/
+src/frontend/coverage/
+
+# Compiled frontend copied into the Python package
+src/backend/src/polar_app/static/*
+!src/backend/src/polar_app/static/.gitkeep
+
+# Local configuration and secrets
+.env
+.env.local
+*.pem
+*.key
+codex-resume.sh
+.serena/
+
+# Persistent personal application data
+database/*
+!database/.gitkeep
+src/backend/database/
+src/database/
+
+# Local visual references may contain personal health data
+AI/raw/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

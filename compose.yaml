@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+    environment:
+      POLAR_APP_HOST: 0.0.0.0
+      POLAR_APP_PORT: 8000
+      POLAR_APP_TIMEZONE: ${POLAR_APP_TIMEZONE:-Europe/Berlin}
+      POLAR_APP_DATABASE_PATH: /app/database/polar-app.sqlite3
+      POLAR_APP_SYNC_INTERVAL_MINUTES: ${POLAR_APP_SYNC_INTERVAL_MINUTES:-60}
+      POLAR_APP_PUBLIC_BASE_URL: ${POLAR_APP_PUBLIC_BASE_URL:-http://localhost:8000}
+      POLAR_APP_SQLITE_VFS: ${POLAR_APP_SQLITE_VFS:-unix-dotfile}
+      POLAR_APP_SQLITE_JOURNAL_MODE: ${POLAR_APP_SQLITE_JOURNAL_MODE:-DELETE}
+      POLAR_APP_POLAR_CLIENT_ID: ${POLAR_APP_POLAR_CLIENT_ID:-}
+      POLAR_APP_POLAR_CLIENT_SECRET: ${POLAR_APP_POLAR_CLIENT_SECRET:-}
+      POLAR_APP_POLAR_REDIRECT_URI: ${POLAR_APP_POLAR_REDIRECT_URI:-http://localhost:8000/api/polar/callback}
+      POLAR_APP_POLAR_TOKEN_ENCRYPTION_KEY: ${POLAR_APP_POLAR_TOKEN_ENCRYPTION_KEY:-}
+    ports:
+      - "${POLAR_APP_PORT:-8000}:8000"
+    volumes:
+      - ./database:/app/database
+    init: true
+    restart: unless-stopped

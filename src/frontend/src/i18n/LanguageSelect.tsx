@@ -1,0 +1,2 @@
+import { useLanguage } from "./useLanguage";
+export function LanguageSelect() { const { language, setLanguage, t } = useLanguage(); return <label className="language-select">{t("language")} <select value={language} onChange={(event) => setLanguage(event.target.value as "en" | "de" | "ru")}><option value="en">English</option><option value="de">Deutsch</option><option value="ru">Русский</option></select></label>; }

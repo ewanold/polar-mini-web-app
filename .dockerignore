@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+.hermes
+src/backend/.venv
+src/backend/**/__pycache__
+src/backend/.pytest_cache
+src/backend/.mypy_cache
+src/backend/.ruff_cache
+src/frontend/node_modules
+src/frontend/dist
+src/frontend/coverage
+database/*
+!database/.gitkeep
+AI/raw
