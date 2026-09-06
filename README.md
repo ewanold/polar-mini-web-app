@@ -1,55 +1,56 @@
-# Personal note
+# Personal Note
 
-This project started as an experiment for two reasons:
+This project began as an experiment for two reasons:
 
-- First, I passed the sixties last year and felt the urgent need to do more for my  health. So I bought a Polar Watch to keep an eye on my training pulse and the overall progress. 
-  
-  Polar offers various ways to watch your training data. But everything is spread over several pages in either the smartphone app or on the web pages. And I wanted the few most important bits in one place.
+- Last year, I entered my sixties and felt an urgent need to do more for my health. I bought a Polar watch to keep an eye on my training heart rate and overall progress.
 
-- Second, I have been programming for over four decades now and in that time I created some rather successful pieces of OpenSource code. But now is the time of the AI! What can you do with it, in what time - and what could even a non-programmer achieve? 
-  Short answer: a skilled programmer can do a lot very quickly even if he has little domain knowledge. This app took maybe 10 working hours to implement and was mainly slowed down because I ran into Codex usage limits. 5 hours worth in tokens was sometimes burnt in 30 minutes. I employed GPT-Sol for planning and mostly GPT-Terra for coding. 
-  A non-skilled programmer would probably have failed. At least in my approach. I had to help Codex by advising details, debugging, copying texts around, setting up a Polar account and finally enable remote debugging in Chrome. 
+  Polar offers several ways to review training data, but it is spread across several pages in the smartphone app and on the website. I wanted the most important information in one place.
 
-For these reasons I decided to put my Codex account to good use and make an agent implement a web based progress monitor based on my personal Polar data. The app itself is rather simple and contains the four tabs:
+- I have been programming for more than four decades and have created some successful open-source software. But this is the age of AI: what can it do, how quickly can it do it, and what could a non-programmer achieve?
 
-- A settings page to connect to Polar services and sync manually.
- 
-  ![settings page](screenshots/settings.png)
+  Short answer: a skilled programmer can achieve a lot very quickly, even with limited domain knowledge. This app took perhaps ten working hours to implement. It was mainly slowed down by Codex usage limits: five hours’ worth of tokens could sometimes be consumed in 30 minutes. I used GPT-Sol for planning and mostly GPT-Terra for coding.
 
-- Mappings offers the possibility to map the different Polar training names to a single collector. For example Polar has Running, Jogging, Trail and so on which I summarize all as Running.
-  
-  ![mappings](screenshots/mappings.png)
+  A non-programmer would probably have failed, at least with my approach. I had to help Codex by clarifying details, debugging, moving text around, setting up a Polar account, and finally enabling remote debugging in Chrome.
 
- - Trainings shows the summaries of your trainings with distance, average heart rate, average pace, distance and and index I wanted additionally which calcuate duration over pace. 
-  
-   ![trainings](screenshots/training.png)
+For these reasons, I decided to put my Codex account to good use and have an agent implement a web-based progress monitor based on my personal Polar data. The app itself is simple and has four tabs:
 
- - Timeline shows dailiy activity and values based on your sleep data.
-  
-The five tiles at the top contain last night's values for 
- - Heart rate variability
- - Lowest heart rate
- - Average respirations per minute
- - **ANS** is a rating value for the sleep phases
- - **Recharge** tells you how much rest you got from last nights sleep.
+- **Settings** connects to Polar services and starts a manual sync.
 
-**ANS** and **Recharge** are specific Polar values.
+  ![Settings page](screenshots/settings.png)
 
-Below the tiles you have the daily activity log that Polar collects while wearing the watch over the day.
+- **Mappings** maps Polar’s different training names to one group. For example, Polar has Running, Jogging, Trail Running, and so on; I summarize them all as Running.
 
-Next there are the charts for HRV, heart rate and so on for the last 28 days.
+  ![Mappings](screenshots/mappings.png)
 
-  ![timeline](screenshots/timeline.png)
+- **Training** shows summaries of training sessions: distance, average heart rate, average pace, duration, and an additional index that divides duration by pace.
 
-One special feature is not obvious: if you hover over one of the lines, markers appear for each recorded point in time. A double click opens a dialog where you can enter descriptions for special events that might affect your sleep. Think of it as a simple diary. Maybe you want to find out how drinking coffee reduces your sleep. Then you can hover over the time lines to find out if you have noted something for that day. Active events also change the line color.
+  ![Training](screenshots/training.png)
 
-At the bottom all such events are listed and you can edit or delete them.
+- **Timeline** shows daily heart-rate activity and values based on sleep data.
 
-  ![events](screenshots/events.png)
+  The five tiles at the top contain the previous night’s values for:
 
-**If you plan to modify this app**, maybe connect it to your Garmin: **use the AI project**. It contains all the data I developed together with the AI. Every planning details, every todo, every step in the logs is still available. Load [MAIN.md](AI/MAIN.md) into your agent and tell it you want changed. It contains all the links your agent needs to learn about the app.
+  - Heart-rate variability
+  - Average heart rate
+  - Average respiration rate
+  - **ANS charge**, a Polar recovery rating based on autonomic-nervous-system data
+  - **Nightly Recharge**, Polar’s assessment of recovery from the previous night’s sleep
 
-The rest of this README is AI-generated, as is each and every file in this project. I did not touch a single line myself. Though I did read some to learn about the internals :-)
+  **ANS charge** and **Nightly Recharge** are Polar-specific values.
+
+  Below the tiles is the continuous Daily Heart Rate chart collected while wearing the watch during the day. The charts that follow show HRV, heart rate, and other nightly metrics over the previous 28 days.
+
+  ![Timeline](screenshots/timeline.png)
+
+One feature is not immediately obvious: hovering over a chart shows the recorded value at that time. Double-click a data point to add a description of a special event that might affect sleep or recovery. Think of it as a simple diary: for example, you might use it to investigate whether drinking coffee affects your sleep. Hover over the charts to see events recorded for that day. On event days, the affected line segment changes colour.
+
+All events are listed at the bottom of the Timeline, where you can edit or delete them.
+
+![Events](screenshots/events.png)
+
+**If you plan to modify this app**, perhaps to connect it to Garmin, use the AI project documentation. It contains the material I developed with the AI: planning details, todos, and logs. Load [MAIN.md](AI/MAIN.md) into your agent and explain what you want to change; it contains the links needed to understand the app.
+
+The remainder of this README, like every file in this project, was generated with AI. I did not write a single line myself, although I did read parts of it to learn about the internals. :-)
 
 # Polar Web App
 
