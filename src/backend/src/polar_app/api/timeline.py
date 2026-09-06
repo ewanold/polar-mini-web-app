@@ -1,7 +1,7 @@
 from datetime import date, datetime, time, timedelta
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, HTTPException, Query, Request, Response, status
 from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
@@ -60,6 +60,10 @@ class TimelineEventCreate(BaseModel):
     description: str
 
 
+class TimelineEventUpdate(BaseModel):
+    description: str
+
+
 class TimelineDayResponse(BaseModel):
     date: date
     sleep: TimelineSleepResponse | None
@@ -92,6 +96,36 @@ def create_timeline_event(payload: TimelineEventCreate, request: Request) -> Tim
         return TimelineEventResponse(
             id=event.id, date=event.event_date, description=event.description
         )
+
+
+@router.put("/events/{event_id}", response_model=TimelineEventResponse)
+def update_timeline_event(
+    event_id: int, payload: TimelineEventUpdate, request: Request
+) -> TimelineEventResponse:
+    description = payload.description.strip()
+    if not description:
+        raise HTTPException(status_code=422, detail="Timeline event description must not be blank")
+    with sessions(request)() as session:
+        event = session.get(TimelineEvent, event_id)
+        if event is None:
+            raise HTTPException(status_code=404, detail="Timeline event was not found")
+        event.description = description
+        session.commit()
+        session.refresh(event)
+        return TimelineEventResponse(
+            id=event.id, date=event.event_date, description=event.description
+        )
+
+
+@router.delete("/events/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_timeline_event(event_id: int, request: Request) -> Response:
+    with sessions(request)() as session:
+        event = session.get(TimelineEvent, event_id)
+        if event is None:
+            raise HTTPException(status_code=404, detail="Timeline event was not found")
+        session.delete(event)
+        session.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("", response_model=TimelineResponse)

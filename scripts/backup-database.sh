@@ -2,7 +2,6 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-STATIC_INDEX="$ROOT_DIR/src/backend/src/polar_app/static/index.html"
 
 if [[ -n "${UV_BIN:-}" ]]; then
   if [[ ! -x "$UV_BIN" ]]; then
@@ -20,24 +19,9 @@ else
   exit 1
 fi
 
-if [[ ! -f "$STATIC_INDEX" ]]; then
-  printf 'error: compiled frontend assets are missing; run ./scripts/build.sh first\n' >&2
-  exit 1
-fi
-
-mkdir -p "$ROOT_DIR/database" "$ROOT_DIR/database/backups" "$ROOT_DIR/database/logs"
-
 CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export UV_PROJECT_ENVIRONMENT="${POLAR_APP_VENV:-$CACHE_HOME/polar-web-app/backend-venv}"
-mkdir -p "$(dirname "$UV_PROJECT_ENVIRONMENT")"
-
 export POLAR_APP_DATABASE_PATH="${POLAR_APP_DATABASE_PATH:-$ROOT_DIR/database/polar-app.sqlite3}"
-export POLAR_APP_HOST="${POLAR_APP_HOST:-0.0.0.0}"
-export POLAR_APP_PORT="${POLAR_APP_PORT:-8000}"
 
 cd "$ROOT_DIR/src/backend"
-"$UV_BIN" run alembic upgrade head
-exec "$UV_BIN" run uvicorn polar_app.main:app \
-  --host "$POLAR_APP_HOST" \
-  --port "$POLAR_APP_PORT" \
-  --workers 1
+"$UV_BIN" run python -m polar_app.backup "$@"

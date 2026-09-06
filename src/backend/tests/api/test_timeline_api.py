@@ -126,3 +126,51 @@ async def test_timeline_event_is_saved_and_returned_on_its_date(tmp_path) -> Non
         {"id": 1, "date": "2026-09-01", "description": "Late dinner"}
     ]
     assert timeline.json()["days"][1]["events"] == []
+
+
+@pytest.mark.anyio
+async def test_timeline_event_description_can_be_updated(tmp_path) -> None:
+    app = create_app(Settings(database_path=tmp_path / "polar.sqlite3"))
+    Base.metadata.create_all(app.state.engine)
+    transport = httpx.ASGITransport(app=app)
+
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        created = await client.post(
+            "/api/timeline/events",
+            json={"date": "2026-09-01", "description": "Late dinner"},
+        )
+        updated = await client.put(
+            f"/api/timeline/events/{created.json()['id']}",
+            json={"description": "Late dinner and dessert"},
+        )
+        timeline = await client.get(
+            "/api/timeline", params={"start": "2026-09-01", "end": "2026-09-01"}
+        )
+
+    assert updated.status_code == 200
+    assert updated.json() == {
+        "id": 1,
+        "date": "2026-09-01",
+        "description": "Late dinner and dessert",
+    }
+    assert timeline.json()["days"][0]["events"] == [updated.json()]
+
+
+@pytest.mark.anyio
+async def test_timeline_event_can_be_deleted(tmp_path) -> None:
+    app = create_app(Settings(database_path=tmp_path / "polar.sqlite3"))
+    Base.metadata.create_all(app.state.engine)
+    transport = httpx.ASGITransport(app=app)
+
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        created = await client.post(
+            "/api/timeline/events",
+            json={"date": "2026-09-01", "description": "Late dinner"},
+        )
+        deleted = await client.delete(f"/api/timeline/events/{created.json()['id']}")
+        timeline = await client.get(
+            "/api/timeline", params={"start": "2026-09-01", "end": "2026-09-01"}
+        )
+
+    assert deleted.status_code == 204
+    assert timeline.json()["days"][0]["events"] == []

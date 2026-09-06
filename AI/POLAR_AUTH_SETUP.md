@@ -88,6 +88,8 @@ http://localhost:8000/settings
 
 Do not begin the OAuth flow at `http://127.0.0.1:8000`. The state cookie is host-only. If the browser starts at `127.0.0.1` but Polar redirects to `localhost`, the callback cannot send the state cookie and the application rejects it with `400 Polar OAuth state validation failed`.
 
+Native startup binds the application to `0.0.0.0:8000` for a trusted home LAN. Other devices may use the server's LAN address for normal dashboard access, but begin **Connect Polar** only at `http://localhost:8000/settings` on the server machine unless a matching LAN hostname callback has been separately registered with Polar. Binding the listener does not modify `POLAR_APP_PUBLIC_BASE_URL` or `POLAR_APP_POLAR_REDIRECT_URI`.
+
 ## 5. Authorize Polar
 
 1. On **Settings**, confirm the page says Polar is not connected.

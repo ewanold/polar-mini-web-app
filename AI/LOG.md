@@ -63,6 +63,17 @@ Open questions:
 - Added persisted English/German/Russian UI-language selection with browser-language fallback. The shared shell and Timeline use it; remaining implemented pages still need migration to the catalog.
 - The chart tooltip displays metric units and axes use unit-bearing titles. The ECharts pointer remains unresolved: it appears close to a populated point but does not keep tracking through empty daily buckets despite several configuration attempts. No controllable browser was available for live inspection; resume with a screen recording or browser-capable test surface before changing the pointer implementation again.
 
+## 2026-09-06
+
+- Added a GitHub-safe `README.md` with native setup, OAuth setup reference, short user guide, privacy guidance, and trusted-home-LAN access instructions.
+- Extended the Daily Heart Rate chart with a 24-hour visible window, initialized at the newest samples and navigable backward across the imported 28-day range.
+- Added local Timeline-event update and delete APIs plus an editable/deletable event list below the charts. Events are created by double-click, color matching chart-line segments amber without point markers, and remain visible in tooltips.
+- Diagnosed the initial failed event edit as an old Uvicorn process serving code before the update endpoint existed; restarted the service and verified live create (`201`), update (`200`), and delete (`204`) operations.
+- Changed native startup to bind `0.0.0.0:8000` by default for a trusted home LAN. The localhost OAuth callback/public URL remain unchanged; the live health endpoint and all-interface listener were verified.
+- Recorded the accepted product scope: date-scoped free-text Timeline events are the implemented manual-context feature, and the verified Polar v3 API is complete for the current application; LAN callbacks and v4 remain deferred extensions rather than release blockers.
+- Added `scripts/backup-database.sh` and `polar_app.backup`: it uses SQLite's online backup API, verifies `PRAGMA integrity_check`, writes timestamped backups, and was exercised successfully against the live local database. Restore steps are documented in `DEPLOYMENT.md`.
+- Verified the focused backend Timeline tests, frontend test/typecheck/lint, production frontend build, backend Ruff, and staged-file whitespace for the related changes. Browser automation could not start Chromium in this environment.
+
 ## 2026-09-05
 
 - Completed English, German, and Russian translation coverage for the implemented Training, Mappings, Settings, Timeline, theme, chart, drill-down, validation, loading, empty, error, and synchronization interfaces.

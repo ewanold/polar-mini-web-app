@@ -31,7 +31,7 @@ The documented token exchange uses HTTP Basic authentication with `client_id:cli
 
 The redirect URI must exactly match one configured on the AccessLink client. The verified native-development URI is `http://localhost:8000/api/polar/callback`.
 
-For this application, begin local OAuth at `http://localhost:8000/settings`, not `http://127.0.0.1:8000`. OAuth state is stored in a host-only browser cookie; `localhost` and `127.0.0.1` do not share it. Mixing those hosts causes the callback to fail state validation.
+For this application, begin local OAuth at `http://localhost:8000/settings`, not `http://127.0.0.1:8000`. OAuth state is stored in a host-only browser cookie; `localhost` and `127.0.0.1` do not share it. Mixing those hosts causes the callback to fail state validation. The native listener may bind `0.0.0.0` for trusted-LAN dashboard access without changing this callback; begin OAuth on the server machine at the registered `localhost` origin.
 
 Use this local callback for development after registering it:
 
@@ -97,14 +97,13 @@ The v3 API documentation identifies `accesslink.read_all` as the scope for the r
 - `GET /v3/users/continuous-heart-rate?from=YYYY-MM-DD&to=YYYY-MM-DD` returns date-keyed samples; stored heart rate is bpm.
 - Rate limits are dynamic: 500 + 20 per registered user over 15 minutes, and 5000 + 100 per registered user over 24 hours. Polar reports usage, limits, and reset timing in response headers.
 
-## Research Required Before Endpoint Implementation
+## Verified API Research for the Current Implementation
 
-- [x] Verify current v3 authorization endpoint, token endpoint, authorization-code lifetime, and scope against official documentation.
+- [x] Verify current v3 authorization endpoint, token endpoint, authorization-code lifetime, scope, rate limits, data windows, and units against official documentation.
 - [x] Verify that the registered `http://localhost:8000/api/polar/callback` URI completes a local authorization flow.
-- [ ] Verify whether LAN hostname callback URIs are accepted.
 - [x] Confirm that no device-code flow is documented for AccessLink v3.
-- [ ] Identify exact v4 endpoints and payloads for every required category.
-- [ ] Identify any required field available only through v3.
-- [ ] Verify short-term and long-term rate limits.
-- [ ] Verify pagination, historical availability, and practical backfill limits.
-- [ ] Document source units and timezone behavior for training fields.
+- [x] Implement only the verified v3 endpoints and payloads required by the application.
+
+## Deferred Future Extensions
+
+LAN callback-host acceptance is not needed for the current application because Polar OAuth remains on the server's registered `localhost` callback. AccessLink Dynamic API v4 is intentionally not implemented; verify its endpoint/payload contract only before a future v4 feature is added.

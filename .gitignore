@@ -39,3 +39,11 @@ AI/raw/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Agent/tool local state
+AI/.hermes/
+
+# Accidental pytest/file URL artifact directories
+file:/
+**/file:/
+

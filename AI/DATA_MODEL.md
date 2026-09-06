@@ -17,18 +17,19 @@ polar_nightly_recharge
 polar_training_sessions
 polar_activity_days
 polar_heart_rate_samples
+timeline_events
 
 # Training Progress tables
 training_groups
 polar_sport_type_mappings
 
-# Planned tables
+# Optional structured-context tables
 manual_day_entries
 manual_events
 manual_tags
 ```
 
-Implemented tables at schema revision `0007` are `polar_sync_state`, `polar_raw_payloads`, `polar_oauth_tokens`, `polar_sleep_days`, `polar_nightly_recharge`, `polar_training_sessions`, `polar_activity_days`, `polar_heart_rate_samples`, `training_groups`, `polar_sport_type_mappings`, and `training_aggregates`. `polar_nightly_recharge` stores nightly heart-rate, HRV, respiration, ANS charge, and Nightly Recharge status when Polar supplies them. `training_aggregates` stores total distance in addition to the metric means and counts. Sleep samples and manual-context tables remain planned.
+Implemented tables at schema revision `0008` are `polar_sync_state`, `polar_raw_payloads`, `polar_oauth_tokens`, `polar_sleep_days`, `polar_nightly_recharge`, `polar_training_sessions`, `polar_activity_days`, `polar_heart_rate_samples`, `timeline_events`, `training_groups`, `polar_sport_type_mappings`, and `training_aggregates`. `timeline_events` is the implemented manual-context model: it stores a user-managed `event_date` and free-text description. The optional structured-context tables are only needed if later requirements go beyond date-scoped events. `polar_nightly_recharge` stores nightly heart-rate, HRV, respiration, ANS charge, and Nightly Recharge status when Polar supplies them. `training_aggregates` stores total distance in addition to the metric means and counts.
 
 `polar_oauth_tokens` stores the Polar user identifier, token type, optional expiry, timestamps, and a Fernet-encrypted access token. The encryption key is environment configuration, never database content or a committed secret. See `POLAR_AUTH_SETUP.md` for key lifecycle and recovery behavior.
 

@@ -219,7 +219,7 @@ polar-web-app/
 - [x] Add `scripts/dev.sh` to supervise FastAPI and the Vite development server from external cache workspaces.
 - [x] Mount `./database:/app/database` in Compose.
 - [x] Configure a single backend worker so only one scheduler instance runs.
-- [x] Bind to `127.0.0.1` by default; document `0.0.0.0` for LAN access.
+- [x] Bind native startup to `0.0.0.0` for the trusted home LAN by default, document the `127.0.0.1` override, and preserve the localhost OAuth callback.
 - [ ] Verify `docker compose up --build` starts the service.
 - [x] Verify natively that the browser loads the React page and `/api/health` through the same port.
 - [ ] Stop and restart the container; verify a file created under `database/` persists.
@@ -286,7 +286,7 @@ polar-web-app/
 
 **Todos:**
 - [x] Verify current v3 OAuth scope and endpoints against official Polar documentation; v4 remains out of scope pending independent verification.
-- [x] Verify the registered local `localhost` callback in a real browser flow; LAN callback restrictions remain open.
+- [x] Verify the registered local `localhost` callback in a real browser flow. A LAN callback is not required while the application retains its registered localhost OAuth origin.
 - [x] Identify that the implemented required records use v3.
 - [x] Record v3 rate limits, historical availability, backfill limits, and source units in `POLAR_API.md`.
 - [x] Implement only documented v3 endpoint paths and scope; defer unverified v4 endpoints.
@@ -569,16 +569,18 @@ polar-web-app/
 - Create `src/frontend/src/features/timeline/TimelinePage.tsx`
 - Create associated tests
 
-**Checkpoint (2026-09-05):** `GET /api/timeline` and `TimelinePage.tsx` serve and render a 28-day Polar-only recovery timeline. It includes normalized sleep/activity/Nightly Recharge data, continuous heart-rate samples, summary tiles, a rolling 24-hour heart-rate chart, and five 28-day metric charts. Manual context remains separate Task 25 work.
+**Checkpoint (2026-09-06):** `GET /api/timeline` and `TimelinePage.tsx` serve and render a 28-day Polar-backed recovery timeline. It includes normalized sleep/activity/Nightly Recharge data, continuous heart-rate samples, summary tiles, five 28-day metric charts, and a Daily Heart Rate chart whose visible rolling 24-hour window can move backward across imported data. Date/description Timeline events are the implemented manual-context mechanism: they have create, update, and delete APIs; the UI creates them by double-click, manages them after the charts, colors event-day line segments amber without point markers, and includes descriptions in tooltips.
 
 **Todos:**
 - [x] Return available sleep, recovery, activity, and continuous heart-rate records grouped by local day.
 - [x] Render localized metric tiles and charts with missing-data states.
 - [x] Test partial days and missing source categories.
-- [ ] Add training, meals, notes, manual context, date-range navigation, and long-range pagination/virtualization.
+- [ ] Add training integration, selected-day detail, and long-range pagination/virtualization. The 24-hour heart-rate window can already navigate the imported 28-day range; Timeline events cover the current manual-context requirement.
 - [x] Commit as `feat: add day-by-day health timeline`.
 
-#### Task 25: Build manual-entry forms
+#### Task 25: Optional structured manual-entry forms
+
+Date-scoped free-text Timeline events are the implemented manual-context feature. Add this separate model only if future requirements need typed, timed, or one-per-day fields beyond those events.
 
 **Files:**
 - Create backend manual-entry API routes
@@ -620,11 +622,11 @@ polar-web-app/
 - Update `README.md`
 
 **Todos:**
-- [ ] Use SQLite's online backup mechanism rather than copying a live database file blindly.
-- [ ] Store timestamped backups under `database/backups/`.
-- [ ] Document restore steps and permissions.
-- [ ] Test backup integrity with `PRAGMA integrity_check` against the copy.
-- [ ] Commit as `ops: add SQLite backup procedure`.
+- [x] Use SQLite's online backup mechanism rather than copying a live database file blindly.
+- [x] Store timestamped backups under `database/backups/`.
+- [x] Document restore steps and permissions.
+- [x] Test backup integrity with `PRAGMA integrity_check` against the copy.
+- [x] Commit as `ops: add SQLite backup procedure`.
 
 #### Task 28: Add end-to-end acceptance tests
 
@@ -651,7 +653,7 @@ polar-web-app/
 **Todos:**
 - [ ] Confirm no OAuth secrets, tokens, raw personal data, databases, backups, or logs are tracked by Git.
 - [ ] Confirm token values are redacted from exceptions and logs.
-- [ ] Document localhost-only default and risks of LAN binding.
+- [x] Document trusted-LAN `0.0.0.0` default, the `127.0.0.1` override, unchanged localhost OAuth callback, and risks of LAN binding.
 - [ ] If LAN access is enabled, document reverse-proxy HTTPS and authentication as a prerequisite for access beyond a trusted home network.
 - [ ] Confirm no public port forwarding is required for routine operation.
 - [ ] Run dependency and container vulnerability checks.
@@ -697,7 +699,10 @@ PUT    /api/training/polar-types/{polar_type}/mapping
 GET    /api/training/groups/{id}/series?range=4w|6m|all
 GET    /api/training/groups/{id}/sessions?from=...&to=...
 
-GET    /api/timeline?from=...&to=...
+GET    /api/timeline?start=...&end=...
+POST   /api/timeline/events
+PUT    /api/timeline/events/{id}
+DELETE /api/timeline/events/{id}
 GET    /api/manual/days/{date}
 PUT    /api/manual/days/{date}
 POST   /api/manual/events

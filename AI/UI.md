@@ -17,13 +17,13 @@ The flow is intentionally initiated from the browser so Polar owns the login and
 
 ## Daily Timeline
 
-The implemented Timeline requests 28 days of normalized Polar sleep, activity, Nightly Recharge, and continuous-heart-rate data. It shows a shared localized **Last night** heading above five metric tiles (HRV, nightly heart rate, respiration, ANS charge, and Nightly Recharge), a rolling 24-hour heart-rate chart that crosses midnight, and 28-day charts for the five nightly metrics. Tiles show the latest value, seven-day average, and a favorable/unfavorable percentage badge. Missing Polar-calculated ANS charge and Nightly Recharge values remain empty rather than being synthesized.
+The implemented Timeline requests 28 days of normalized Polar sleep, activity, Nightly Recharge, and continuous-heart-rate data. It shows a shared localized **Last night** heading above five metric tiles (HRV, nightly heart rate, respiration, ANS charge, and Nightly Recharge), a rolling 24-hour heart-rate chart that crosses midnight, and 28-day charts for the five nightly metrics. The Daily Heart Rate chart initially displays the newest 24-hour window; its slider and inside pan navigate backward through the imported 28-day sample range. Tiles show the latest value, seven-day average, and a favorable/unfavorable percentage badge. Missing Polar-calculated ANS charge and Nightly Recharge values remain empty rather than being synthesized.
 
 Timeline and Training charts use ECharts with labeled axes, thin lines, hover crosshairs, and exact-value tooltips. The five Training panels have independent borders; charts reserve internal padding for titles and axis labels.
 
-Right-clicking a Timeline chart datapoint opens a free-text event prompt for that datapoint's date. Saved events are marked with an amber diamond on matching chart datapoints and included in the hover tooltip.
+Double-clicking a Timeline chart datapoint opens a free-text event prompt for that datapoint's date. Events are local date/description records, shown in an editable/deletable list after the charts. An event date changes the matching line segment to amber without adding point markers, and its description is included in hover tooltips.
 
-Manual context, date-range navigation, selected-day detail, and manual-entry editing remain future work.
+Timeline events provide the implemented date-scoped manual context. Add typed daily/timed entries only if future requirements exceed a date and free-text description.
 
 ## Training Progress Page
 
@@ -33,10 +33,11 @@ The implementation provides `4 weeks`, `6 months`, and `All` controls, group sel
 
 Charts:
 
-1. Mean session heart rate (`bpm`)
-2. Mean session pace (`min/km`)
-3. Mean session duration (`minutes`)
-4. Mean session duration/pace index (no displayed unit)
+1. Total distance (`km`)
+2. Mean session heart rate (`bpm`)
+3. Mean session pace (`min/km`)
+4. Mean session duration (`minutes`)
+5. Mean session duration/pace index (no displayed unit)
 
 Controls:
 
@@ -60,15 +61,14 @@ The reference image contains stacked panels for heart rate, pace, and elevation 
 
 ## Training-Type Mapping Page
 
-The current initial implementation creates and lists training groups. The backend already exposes observed sport types and atomic mapping updates, but the browser interface for displaying those types and assigning them is not implemented yet.
+The Mapping page creates and lists groups, displays every observed Polar sport type with session count/current mapping, warns about unmapped sessions, and assigns each type to a group, `ignored`, or `unmapped`. Group deletion requires explicit reassignment or unmapping of its mapped sport types; the corresponding aggregates are rebuilt or removed safely.
 
-- Create, rename, reorder, recolor, enable, and delete collected groups.
+- Create and delete collected groups.
 - List every observed Polar sport type with session count and current mapping.
 - Assign multiple Polar types to one collected group.
 - Mark a type ignored or return it to unmapped.
 - Show unknown types prominently instead of silently assigning them.
-- Require reassignment or unmapping before deleting a group that has mappings.
-- Rebuild affected aggregate history after mapping changes.
+- Group rename, ordering, color selection, and enabled-state controls remain future work.
 
 ## Manual Context
 

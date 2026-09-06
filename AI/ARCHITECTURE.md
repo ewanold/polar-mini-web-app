@@ -309,7 +309,7 @@ The current CIFS project filesystem cannot provide the byte-range locking expect
 - Use native production mode when minimizing Docker overhead or integrating with existing host administration is more important.
 - Use `systemd` or another host service manager for unattended native operation, automatic restart, and startup after boot.
 - Never run Docker and native instances simultaneously against the same SQLite database.
-- Bind to localhost by default; explicitly enable trusted-LAN access when required.
+- Native startup binds to `0.0.0.0` for a trusted home LAN by default; use `POLAR_APP_HOST=127.0.0.1` to restrict it locally. This listener change does not alter the localhost OAuth callback.
 
 ## Architectural Acceptance Criteria
 

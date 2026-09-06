@@ -61,18 +61,31 @@ The initial in-process scheduler assumes exactly one backend worker. Multi-worke
 
 ## Networking
 
-- Bind to `127.0.0.1` by default for local use.
-- Allow explicit binding to `0.0.0.0` for a trusted home LAN.
+- The default native startup binds to `0.0.0.0` for access from a trusted home LAN. Use `POLAR_APP_HOST=127.0.0.1 bash scripts/run.sh` to restrict it to this computer.
+- Keep Polar authorization on the server machine at `http://localhost:8000`: `POLAR_APP_PUBLIC_BASE_URL` and `POLAR_APP_POLAR_REDIRECT_URI` remain unchanged, so LAN binding does not alter Polar OAuth.
 - Do not reopen broad public port forwarding for routine use.
 - If access beyond the trusted home network is added, require authentication and HTTPS behind a properly configured reverse proxy or VPN.
 - If Polar rejects local OAuth callbacks, expose only the callback route temporarily and remove that exposure after authorization.
 
 ## Backups
 
-- Store timestamped backups under `database/backups/`.
-- Use SQLite's online backup mechanism rather than copying an active database file blindly.
-- Run `PRAGMA integrity_check` against created backups.
-- Document and test restore steps before relying on the backup process.
+Create a live-database-safe backup with SQLite's online backup API:
+
+```bash
+bash scripts/backup-database.sh
+```
+
+The command writes `database/backups/polar-app-YYYYMMDDTHHMMSSZ.sqlite3` only after `PRAGMA integrity_check` returns `ok`; a failed copy leaves no completed backup. The backup and database are ignored by Git because they contain personal health data.
+
+To restore a chosen backup, first stop the native or Docker application and confirm no process holds the database. Preserve the current database before replacement, then copy the selected verified backup into place:
+
+```bash
+mv database/polar-app.sqlite3 database/polar-app.sqlite3.before-restore
+cp database/backups/polar-app-YYYYMMDDTHHMMSSZ.sqlite3 database/polar-app.sqlite3
+bash scripts/run.sh
+```
+
+After startup, check the health endpoint and expected Timeline/Training data. Do not run a native and Docker process against the same database during backup or restore.
 
 ## Upgrade Requirements
 

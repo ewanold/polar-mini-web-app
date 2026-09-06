@@ -30,7 +30,7 @@ bash scripts/build.sh
 bash scripts/run.sh
 ```
 
-Open <http://localhost:8000>.
+Open <http://localhost:8000> on the server, or `http://<server-LAN-IP>:8000` from another device on the trusted home network. Keep Polar OAuth on the server's `localhost` URL; network binding does not change its callback configuration.
 
 This checkout may be on a `noexec` CIFS mount. Invoke repository scripts with `bash`, as shown above.
 
@@ -49,7 +49,7 @@ The complete, GitHub-safe setup guide is [AI/POLAR_AUTH_SETUP.md](AI/POLAR_AUTH_
 
 - The top tiles show the latest nightly value, seven-day average, and comparison where data is available.
 - Hover a chart for an exact value and crosshair.
-- Double-click a Timeline datapoint to create a dated free-text special event. Event dates are highlighted with a diamond marker and the event appears in the chart tooltip.
+- Double-click a Timeline datapoint to create a dated free-text special event. Event dates change the chart line color and the event appears in the hover tooltip; manage existing events at the bottom of the Timeline.
 
 ### Training Progress
 
@@ -62,6 +62,16 @@ The complete, GitHub-safe setup guide is [AI/POLAR_AUTH_SETUP.md](AI/POLAR_AUTH_
 
 - **Sync now** imports currently available Polar records and reports new, updated, unchanged, and failed records by category.
 - After Polar is connected, the in-process scheduler re-syncs every 60 minutes by default. Set `POLAR_APP_SYNC_INTERVAL_MINUTES` in `.env` to change the interval.
+
+## Backups
+
+Create an online, integrity-checked SQLite backup while the application is running:
+
+```bash
+bash scripts/backup-database.sh
+```
+
+The command prints the new file under `database/backups/`. Restore instructions and safety checks are in [AI/DEPLOYMENT.md](AI/DEPLOYMENT.md). Backups contain personal health data and must remain outside Git.
 
 ## Development and documentation
 
