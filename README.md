@@ -1,3 +1,56 @@
+# Personal note
+
+This project started as an experiment for two reasons:
+
+- First, I passed the sixties last year and felt the urgent need to do more for my  health. So I bought a Polar Watch to keep an eye on my training pulse and the overall progress. 
+  
+  Polar offers various ways to watch your training data. But everything is spread over several pages in either the smartphone app or on the web pages. And I wanted the few most important bits in one place.
+
+- Second, I have been programming for over four decades now and in that time I created some rather successful pieces of OpenSource code. But now is the time of the AI! What can you do with it, in what time - and what could even a non-programmer achieve? 
+  Short answer: a skilled programmer can do a lot very quickly even if he has little domain knowledge. This app took maybe 10 working hours to implement and was mainly slowed down because I ran into Codex usage limits. 5 hours worth in tokens was sometimes burnt in 30 minutes. I employed GPT-Sol for planning and mostly GPT-Terra for coding. 
+  A non-skilled programmer would probably have failed. At least in my approach. I had to help Codex by advising details, debugging, copying texts around, setting up a Polar account and finally enable remote debugging in Chrome. 
+
+For these reasons I decided to put my Codex account to good use and make an agent implement a web based progress monitor based on my personal Polar data. The app itself is rather simple and contains the four tabs:
+
+- A settings page to connect to Polar services and sync manually.
+ 
+  ![settings page](screenshots/settings.png)
+
+- Mappings offers the possibility to map the different Polar training names to a single collector. For example Polar has Running, Jogging, Trail and so on which I summarize all as Running.
+  
+  ![mappings](screenshots/mappings.png)
+
+ - Trainings shows the summaries of your trainings with distance, average heart rate, average pace, distance and and index I wanted additionally which calcuate duration over pace. 
+  
+   ![trainings](screenshots/training.png)
+
+ - Timeline shows dailiy activity and values based on your sleep data.
+  
+The five tiles at the top contain last night's values for 
+ - Heart rate variability
+ - Lowest heart rate
+ - Average respirations per minute
+ - **ANS** is a rating value for the sleep phases
+ - **Recharge** tells you how much rest you got from last nights sleep.
+
+**ANS** and **Recharge** are specific Polar values.
+
+Below the tiles you have the daily activity log that Polar collects while wearing the watch over the day.
+
+Next there are the charts for HRV, heart rate and so on for the last 28 days.
+
+  ![timeline](screenshots/timeline.png)
+
+One special feature is not obvious: if you hover over one of the lines, markers appear for each recorded point in time. A double click opens a dialog where you can enter descriptions for special events that might affect your sleep. Think of it as a simple diary. Maybe you want to find out how drinking coffee reduces your sleep. Then you can hover over the time lines to find out if you have noted something for that day. Active events also change the line color.
+
+At the bottom all such events are listed and you can edit or delete them.
+
+  ![events](screenshots/events.png)
+
+**If you plan to modify this app**, maybe connect it to your Garmin: **use the AI project**. It contains all the data I developed together with the AI. Every planning details, every todo, every step in the logs is still available. Load [MAIN.md](AI/MAIN.md) into your agent and tell it you want changed. It contains all the links your agent needs to learn about the app.
+
+The rest of this README is AI-generated, as is each and every file in this project. I did not touch a single line myself. Though I did read some to learn about the internals :-)
+
 # Polar Web App
 
 A private, self-hosted dashboard for importing Polar AccessLink data and reviewing recovery, heart-rate, and training trends. It is intended for personal observation and progress tracking, **not** medical diagnosis.
@@ -61,6 +114,7 @@ The complete, GitHub-safe setup guide is [AI/POLAR_AUTH_SETUP.md](AI/POLAR_AUTH_
 ### Settings
 
 - **Sync now** imports currently available Polar records and reports new, updated, unchanged, and failed records by category.
+- Settings shows the time of the last successful scheduled sync and refreshes that status every minute while open.
 - After Polar is connected, the in-process scheduler re-syncs every 60 minutes by default. Set `POLAR_APP_SYNC_INTERVAL_MINUTES` in `.env` to change the interval.
 
 ## Backups
