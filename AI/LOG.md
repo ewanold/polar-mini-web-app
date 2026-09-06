@@ -72,6 +72,7 @@ Open questions:
 - Changed native startup to bind `0.0.0.0:8000` by default for a trusted home LAN. The localhost OAuth callback/public URL remain unchanged; the live health endpoint and all-interface listener were verified.
 - Recorded the accepted product scope: date-scoped free-text Timeline events are the implemented manual-context feature, and the verified Polar v3 API is complete for the current application; LAN callbacks and v4 remain deferred extensions rather than release blockers.
 - Added `scripts/backup-database.sh` and `polar_app.backup`: it uses SQLite's online backup API, verifies `PRAGMA integrity_check`, writes timestamped backups, and was exercised successfully against the live local database. Restore steps are documented in `DEPLOYMENT.md`.
+- Added `last_success_at` to `GET /api/polar/status` from the scheduler's persisted all-category state. Settings displays it in local time and refreshes status every minute, so successful hourly syncs appear without a page reload; the restarted live API returned the field.
 - Verified the focused backend Timeline tests, frontend test/typecheck/lint, production frontend build, backend Ruff, and staged-file whitespace for the related changes. Browser automation could not start Chromium in this environment.
 
 ## 2026-09-05

@@ -7,6 +7,7 @@ type PolarStatus = {
   connected: boolean;
   polar_user_id: string | null;
   expires_at: string | null;
+  last_success_at: string | null;
 };
 
 type SyncCategoryResult = {
@@ -45,17 +46,20 @@ export function SettingsPage() {
   const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
-    void fetch("/api/polar/status")
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error();
-        }
-        return (await response.json()) as PolarStatus;
-      })
-      .then(setStatus)
-      .catch(() => {
-        setError("unableToLoadPolarStatus");
-      });
+    let active = true;
+    async function loadStatus() {
+      try {
+        const response = await fetch("/api/polar/status");
+        if (!response.ok) throw new Error();
+        const nextStatus = (await response.json()) as PolarStatus;
+        if (active) setStatus(nextStatus);
+      } catch {
+        if (active) setError("unableToLoadPolarStatus");
+      }
+    }
+    void loadStatus();
+    const refresh = window.setInterval(() => void loadStatus(), 60_000);
+    return () => { active = false; window.clearInterval(refresh); };
   }, []);
 
   async function syncNow() {
@@ -84,6 +88,7 @@ export function SettingsPage() {
       {status?.connected ? (
         <>
           <p>{t("connectedAsUser", { userId: status.polar_user_id ?? "-" })}</p>
+          {status.last_success_at ? <p>{t("lastSuccessfulSync", { value: new Date(status.last_success_at).toLocaleString() })}</p> : null}
           <button type="button" onClick={() => void syncNow()} disabled={syncing}>
             {t(syncing ? "synchronizing" : "syncNow")}
           </button>

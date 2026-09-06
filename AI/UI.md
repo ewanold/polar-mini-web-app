@@ -11,7 +11,7 @@ The implemented application provides four responsive routes with accessible navi
 
 ## Settings and Synchronization
 
-Settings fetches `GET /api/polar/status` and displays the current connection state. When disconnected, it provides **Connect Polar**, a browser navigation to `/api/polar/connect`. When connected, it provides **Sync now**, which posts to `/api/polar/sync`, prevents a duplicate click while pending, and displays every category's new, updated, unchanged, and error counts.
+Settings fetches `GET /api/polar/status` and displays the current connection state. When disconnected, it provides **Connect Polar**, a browser navigation to `/api/polar/connect`. When connected, it provides **Sync now**, displays the last successful scheduled synchronization in the browser's local date/time format, and refreshes status every minute so the hourly scheduler result appears without a page reload. Manual sync posts to `/api/polar/sync`, prevents a duplicate click while pending, and displays every category's new, updated, unchanged, and error counts.
 
 The flow is intentionally initiated from the browser so Polar owns the login and consent screen. The browser never receives the OAuth client secret, access token, or Fernet token-encryption key. See `POLAR_AUTH_SETUP.md` for the configuration and callback-host requirement.
 

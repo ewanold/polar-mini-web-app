@@ -116,6 +116,7 @@ export const de = {
   polarSynchronizationFailed: "Die Polar-Synchronisierung ist fehlgeschlagen.",
   checkingPolarConnection: "Polar-Verbindung wird geprüft…",
   connectedAsUser: "Polar ist als Benutzer {userId} verbunden.",
+  lastSuccessfulSync: "Letzte erfolgreiche Synchronisierung: {value}",
   syncNow: "Jetzt synchronisieren",
   synchronizing: "Synchronisierung…",
   connectPolar: "Polar verbinden",

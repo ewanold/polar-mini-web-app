@@ -1,7 +1,7 @@
 # ruff: noqa: E501
 
 from collections.abc import Callable
-from datetime import date, timedelta
+from datetime import UTC, date, timedelta
 from typing import Any
 
 import httpx
@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from polar_app.config import Settings
 from polar_app.models.polar import PolarOAuthToken
+from polar_app.models.sync import PolarSyncState
 from polar_app.polar.client import PolarClient
 from polar_app.polar.sync_daily import (
     sync_activity,
@@ -21,10 +22,16 @@ from polar_app.polar.sync_training import sync_training
 
 def connection_status(session: Session) -> dict[str, Any]:
     token = session.query(PolarOAuthToken).one_or_none()
+    sync_state = session.get(PolarSyncState, "all")
     return {
         "connected": token is not None,
         "polar_user_id": token.polar_user_id if token else None,
         "expires_at": token.expires_at.isoformat() if token and token.expires_at else None,
+        "last_success_at": (
+            sync_state.last_success_at.replace(tzinfo=UTC).isoformat()
+            if sync_state and sync_state.last_success_at
+            else None
+        ),
     }
 
 

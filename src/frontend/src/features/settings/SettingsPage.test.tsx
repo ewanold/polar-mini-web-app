@@ -30,6 +30,22 @@ describe("SettingsPage", () => {
     );
   });
 
+  it("shows the last successful synchronization when status provides it", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        connected: true,
+        polar_user_id: "62661976",
+        expires_at: null,
+        last_success_at: "2026-09-06T10:15:00+00:00",
+      }),
+    } as Response);
+
+    renderPage();
+
+    expect(await screen.findByText(/Last successful sync:/)).toBeVisible();
+  });
+
   it("runs a Polar synchronization and displays every category outcome", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce({
