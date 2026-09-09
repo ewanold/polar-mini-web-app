@@ -5,14 +5,24 @@ import { TrainingSeries } from "../../api/training";
 import { useLanguage } from "../../i18n/useLanguage";
 import { formatMetricTooltipValue } from "./trainingChartFormatting";
 
+type MetricField = keyof Pick<TrainingSeries["buckets"][number], "total_distance_meters" | "average_heart_rate" | "average_pace_seconds_per_kilometer" | "average_duration_seconds" | "average_duration_pace_index">;
+
 type Metric = {
   label: string;
-  field: keyof Pick<TrainingSeries["buckets"][number], "total_distance_meters" | "average_heart_rate" | "average_pace_seconds_per_kilometer" | "average_duration_seconds" | "average_duration_pace_index">;
+  field: MetricField;
+  value: (bucket: TrainingSeries["buckets"][number]) => number | null;
   format: (value: number) => string;
+  axisFormat?: (value: number) => string;
 };
 
-function paceNumber(value: number) {
-  return `${Math.floor(value / 60)}:${String(Math.round(value % 60)).padStart(2, "0")}`;
+function formatMinutesSeconds(seconds: number) {
+  const roundedSeconds = Math.round(seconds);
+  return `${Math.floor(roundedSeconds / 60)}:${String(roundedSeconds % 60).padStart(2, "0")}`;
+}
+
+function formatHoursMinutes(seconds: number) {
+  const totalMinutes = Math.round(seconds / 60);
+  return `${Math.floor(totalMinutes / 60)}:${String(totalMinutes % 60).padStart(2, "0")}`;
 }
 
 export function TrainingCharts({ series, color, onSelect }: { series: TrainingSeries; color: string; onSelect: (index: number) => void }) {
@@ -20,11 +30,11 @@ export function TrainingCharts({ series, color, onSelect }: { series: TrainingSe
   const chartRef = useRef<ReactECharts>(null);
   const labels = series.buckets.map((bucket) => bucket.date);
   const metrics: Metric[] = [
-    { label: t("totalDistance"), field: "total_distance_meters", format: (value) => t("kilometerValue", { value: (value / 1000).toFixed(2) }) },
-    { label: t("meanHeartRate"), field: "average_heart_rate", format: (value) => t("beatsPerMinuteValue", { value: Math.round(value) }) },
-    { label: t("meanPace"), field: "average_pace_seconds_per_kilometer", format: (value) => t("paceValue", { value: paceNumber(value) }) },
-    { label: t("meanDuration"), field: "average_duration_seconds", format: (value) => t("minuteValue", { value: Math.round(value / 60) }) },
-    { label: t("durationPaceIndex"), field: "average_duration_pace_index", format: (value) => value.toFixed(2) },
+    { label: t("totalDistance"), field: "total_distance_meters", value: (bucket) => bucket.total_distance_meters === null ? null : bucket.total_distance_meters / 1000, format: (value) => t("kilometerValue", { value: value.toFixed(2) }) },
+    { label: t("meanHeartRate"), field: "average_heart_rate", value: (bucket) => bucket.average_heart_rate, format: (value) => t("beatsPerMinuteValue", { value: Math.round(value) }) },
+    { label: t("meanPace"), field: "average_pace_seconds_per_kilometer", value: (bucket) => bucket.average_pace_seconds_per_kilometer, format: (value) => t("paceValue", { value: formatMinutesSeconds(value) }), axisFormat: formatMinutesSeconds },
+    { label: t("meanDuration"), field: "average_duration_seconds", value: (bucket) => bucket.average_duration_seconds, format: formatHoursMinutes, axisFormat: formatHoursMinutes },
+    { label: t("durationPaceIndex"), field: "average_duration_pace_index", value: (bucket) => bucket.average_duration_pace_index, format: (value) => value.toFixed(2) },
   ];
   const axisNames = [t("totalDistanceAxis"), t("meanHeartRateAxis"), t("meanPaceAxis"), t("meanDurationAxis"), t("durationPaceIndex")];
   useEffect(() => {
@@ -43,10 +53,10 @@ export function TrainingCharts({ series, color, onSelect }: { series: TrainingSe
     axisPointer: { link: [{ xAxisIndex: "all" }], snap: false, label: { show: true } },
     grid: metrics.map((_, index) => ({ left: 82, right: 32, top: 48 + index * 186, height: 90 })),
     xAxis: metrics.map((_, index) => ({ type: "category", data: labels, gridIndex: index, axisLabel: { show: true, hideOverlap: true }, axisPointer: { show: true, snap: false, triggerTooltip: true } })),
-    yAxis: metrics.map((_, index) => ({ type: "value", name: axisNames[index], gridIndex: index, scale: true, axisLabel: { formatter: (value: number) => String(Math.round(value * 100) / 100) } })),
+    yAxis: metrics.map((metric, index) => ({ type: "value", name: axisNames[index], gridIndex: index, scale: true, axisLabel: { formatter: (value: number) => metric.axisFormat ? metric.axisFormat(value) : String(Math.round(value * 100) / 100) } })),
     series: [
-      ...metrics.map((metric, index) => ({ name: metric.label, type: "line", xAxisIndex: index, yAxisIndex: index, connectNulls: false, showSymbol: true, symbolSize: 7, lineStyle: { color }, itemStyle: { color }, data: series.buckets.map((bucket) => bucket[metric.field]) })),
-      ...metrics.map((metric, index) => { const anchor = series.buckets.find((bucket) => bucket[metric.field] !== null)?.[metric.field] ?? 0; return { name: `__pointer-${index}`, type: "line", xAxisIndex: index, yAxisIndex: index, silent: true, showSymbol: false, lineStyle: { opacity: 0 }, itemStyle: { opacity: 0 }, tooltip: { show: false }, data: series.buckets.map((bucket) => bucket[metric.field] ?? anchor) }; }),
+      ...metrics.map((metric, index) => ({ name: metric.label, type: "line", xAxisIndex: index, yAxisIndex: index, connectNulls: false, showSymbol: true, symbolSize: 7, lineStyle: { color }, itemStyle: { color }, data: series.buckets.map((bucket) => metric.value(bucket)) })),
+      ...metrics.map((metric, index) => { const anchor = series.buckets.map((bucket) => metric.value(bucket)).find((value) => value !== null) ?? 0; return { name: `__pointer-${index}`, type: "line", xAxisIndex: index, yAxisIndex: index, silent: true, showSymbol: false, lineStyle: { opacity: 0 }, itemStyle: { opacity: 0 }, tooltip: { show: false }, data: series.buckets.map((bucket) => metric.value(bucket) ?? anchor) }; }),
     ],
   }} onEvents={{ click: (event: { dataIndex?: number }) => { if (event.dataIndex !== undefined) onSelect(event.dataIndex); } }} />
   </div>;

@@ -17,7 +17,7 @@ The flow is intentionally initiated from the browser so Polar owns the login and
 
 ## Daily Timeline
 
-The implemented Timeline requests 28 days of normalized Polar sleep, activity, Nightly Recharge, and continuous-heart-rate data. It shows a shared localized **Last night** heading above five metric tiles (HRV, nightly heart rate, respiration, ANS charge, and Nightly Recharge), a rolling 24-hour heart-rate chart that crosses midnight, and 28-day charts for the five nightly metrics. The Daily Heart Rate chart initially displays the newest 24-hour window; its slider and inside pan navigate backward through the imported 28-day sample range. Tiles show the latest value, seven-day average, and a favorable/unfavorable percentage badge. Missing Polar-calculated ANS charge and Nightly Recharge values remain empty rather than being synthesized.
+The implemented Timeline requests 28 days of normalized Polar sleep, activity, Nightly Recharge, and continuous-heart-rate data. It shows a shared localized **Last night** heading above five metric tiles (HRV, nightly heart rate, respiration, ANS charge, and the Polar-app-style 0–100 nightly/sleep score), a rolling 24-hour heart-rate chart that crosses midnight, and 28-day charts for the five nightly metrics. The Daily Heart Rate chart initially displays the newest 24-hour window; its slider and inside pan navigate backward through the imported 28-day sample range. Tiles show the latest value, seven-day average, and a favorable/unfavorable percentage badge. Missing Polar-calculated ANS charge values remain empty rather than being synthesized; the Nightly Recharge tile/chart uses the normalized sleep score instead of the categorical `nightly_recharge_status` value from the AccessLink Nightly Recharge endpoint.
 
 Timeline and Training charts use ECharts with labeled axes, thin lines, hover crosshairs, and exact-value tooltips. The five Training panels have independent borders; charts reserve internal padding for titles and axis labels.
 
@@ -36,7 +36,7 @@ Charts:
 1. Total distance (`km`)
 2. Mean session heart rate (`bpm`)
 3. Mean session pace (`min/km`)
-4. Mean session duration (`minutes`)
+4. Mean session duration (`h:mm` y-axis labels; title remains minutes for the stored value unit)
 5. Mean session duration/pace index (no displayed unit)
 
 Controls:
@@ -52,7 +52,9 @@ Chart behavior:
 - Shared date alignment and linked crosshair/tooltips
 - Tooltip with bucket range, metric value, contributing metric sample count, and total session count
 - Gaps rather than zeros for missing metrics
-- Pace formatted as `mm:ss min/km`
+- Total distance plotted in kilometers even though the API/storage field is meters
+- Pace y-axis and tooltips formatted as `mm:ss min/km`
+- Duration y-axis and tooltips formatted as `h:mm`
 - Group color used as an accent, never as the only identifier
 - Responsive sizing and accessible labels
 - Bucket selection opens the contributing sessions for inspection

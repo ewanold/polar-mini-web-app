@@ -87,3 +87,8 @@ Open questions:
 - Implemented the Polar-backed Timeline: 28-day nightly recovery charts, five localized nightly summary tiles, and a rolling 24-hour Continuous Heart Rate chart. The tiles use a shared localized heading rather than repeating “last night” in every label. Available values are displayed without fabricating missing ANS charge or Nightly Recharge status.
 - Refined Training chart cards into five independently bordered panels with internal title/axis spacing and readable x-axis labels.
 - Fixed a CIFS SQLite lifecycle issue: reapplying the database-global journal-mode pragma for every new connection could lock the Timeline API. It now runs only on the engine's first connection. A stale dotfile-VFS lock directory left by a force-killed process was removed after confirming no application process held the database; native startup and `GET /api/timeline` were then verified.
+
+## 2026-09-09
+
+- Corrected Training Progress chart value display: total distance is now plotted in kilometers to match its axis title, pace y-axis labels use `mm:ss`, and duration y-axis labels use `h:mm`. Source files and the currently served static chart asset were updated because the production frontend bundle could not be regenerated in this environment.
+- Corrected the Timeline Nightly Recharge tile/chart to use the normalized Polar sleep score stream for the Polar-app-style 0–100 value instead of AccessLink's categorical `nightly_recharge_status` field. The source file and currently served static bundle were patched.

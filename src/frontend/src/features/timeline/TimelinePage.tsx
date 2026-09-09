@@ -3,18 +3,18 @@ import ReactECharts from "echarts-for-react";
 import { useTimeline, type TimelineDay, type TimelineEvent, type TimelineNightlyRecharge } from "../../api/timeline";
 import { useLanguage } from "../../i18n/useLanguage";
 
-type Metric = keyof TimelineNightlyRecharge;
+type Metric = keyof TimelineNightlyRecharge | "sleep_score";
 type Tile = { labelKey: "nightlyHrv" | "nightlyHeartRate" | "respiration" | "ansCharge" | "categoryNightlyRecharge"; metric: Metric; unit: string; favourable: "higher" | "lower" };
 const tiles: Tile[] = [
   { labelKey: "nightlyHrv", metric: "heart_rate_variability_avg", unit: "ms", favourable: "higher" },
   { labelKey: "nightlyHeartRate", metric: "heart_rate_avg", unit: "bpm", favourable: "lower" },
   { labelKey: "respiration", metric: "breathing_rate_avg", unit: "breaths/min", favourable: "lower" },
   { labelKey: "ansCharge", metric: "ans_charge", unit: "score", favourable: "higher" },
-  { labelKey: "categoryNightlyRecharge", metric: "nightly_recharge_status", unit: "status", favourable: "higher" },
+  { labelKey: "categoryNightlyRecharge", metric: "sleep_score", unit: "score", favourable: "higher" },
 ];
 
 function mean(values: Array<number | null>) { const usable = values.filter((value): value is number => value !== null); return usable.length ? usable.reduce((sum, value) => sum + value, 0) / usable.length : null; }
-function nightlyValues(days: TimelineDay[], metric: Metric) { return days.map((day) => day.nightly_recharge?.[metric] ?? null); }
+function nightlyValues(days: TimelineDay[], metric: Metric) { return days.map((day) => metric === "sleep_score" ? day.sleep?.score ?? null : day.nightly_recharge?.[metric] ?? null); }
 function unitFor(tile: Tile, t: ReturnType<typeof useLanguage>["t"]) { return tile.unit === "breaths/min" ? t("breathsPerMinute") : tile.unit; }
 
 function MetricTile({ tile, days }: { tile: Tile; days: TimelineDay[] }) {
@@ -60,7 +60,7 @@ function TimelineEvents({ events }: { events: TimelineEvent[] }) {
   return <section className="timeline-events"><h2>{t("events")}</h2><ul>{events.map((event) => <li key={event.id}><time dateTime={event.date}>{event.date}</time><span>{event.description}</span><button type="button" aria-label={t("editEvent", { description: event.description })} onClick={() => void editEvent(event)}>{t("edit")}</button><button className="danger-button" type="button" aria-label={t("deleteEvent", { description: event.description })} onClick={() => void deleteEvent(event)}>{t("delete")}</button></li>)}</ul></section>;
 }
 
-function NightlyChart({ tile, days }: { tile: Tile; days: TimelineDay[] }) { const { t } = useLanguage(); return <LineChart className="timeline-chart" title={t(tile.labelKey)} unit={unitFor(tile, t)} events={days.flatMap((day) => day.events ?? [])} points={days.flatMap((day) => { const value = day.nightly_recharge?.[tile.metric]; return value === null || value === undefined ? [] : [[day.date, value] as [string, number]]; })} />; }
+function NightlyChart({ tile, days }: { tile: Tile; days: TimelineDay[] }) { const { t } = useLanguage(); return <LineChart className="timeline-chart" title={t(tile.labelKey)} unit={unitFor(tile, t)} events={days.flatMap((day) => day.events ?? [])} points={days.flatMap((day) => { const value = tile.metric === "sleep_score" ? day.sleep?.score : day.nightly_recharge?.[tile.metric]; return value === null || value === undefined ? [] : [[day.date, value] as [string, number]]; })} />; }
 function DailyHeartRateChart({ days }: { days: TimelineDay[] }) { const { t } = useLanguage(); const points = days.flatMap((day) => day.heart_rate?.samples ?? []).map((sample) => [sample.sampled_at, sample.heart_rate] as [string, number]); return <LineChart className="timeline-day-heart-rate" title={t("dailyHeartRate")} unit="bpm" events={days.flatMap((day) => day.events ?? [])} points={points} rolling24Hours />; }
 
 export function TimelinePage() { const { t } = useLanguage(); const query = useTimeline(); const days = query.data?.days ?? []; const events = days.flatMap((day) => day.events ?? []); return <section aria-labelledby="timeline-title" className="page-panel"><p className="eyebrow">{t("dailyTimeline")}</p><h1 id="timeline-title">{t("dailyTimeline")}</h1>{query.isLoading ? <p>{t("timelineLoading")}</p> : null}{query.isError ? <p role="alert">{t("timelineError")}</p> : null}{query.data ? <><h2 className="timeline-summary-title">{t("nightlySummary")}</h2><div className="timeline-summary">{tiles.map((tile) => <MetricTile key={tile.labelKey} tile={tile} days={days} />)}</div><DailyHeartRateChart days={days} /><div className="timeline-charts">{tiles.map((tile) => <NightlyChart key={tile.labelKey} tile={tile} days={days} />)}</div><TimelineEvents events={events} /></> : null}</section>; }
