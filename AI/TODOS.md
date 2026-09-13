@@ -46,6 +46,7 @@ The complete ordered implementation checklist is in `IMPLEMENTATION_PLAN.md`. Th
 - [x] Add a selected-group control and persist the selected range in the URL.
 - [x] Add contributing-session drill-down.
 - [x] Diagnose and fix the Training Progress chart pointer so it tracks across populated and empty buckets.
+- [x] Mark every actual Timeline/Training chart value with a circle, connect internal missing intervals with dotted lines, and carry the last value horizontally through a successful synchronization date.
 - [x] Complete translation coverage for Training, Mappings, Settings, theme controls, chart labels, validation, and status messages in English, German, and Russian.
 
 ## Timeline and Completion
@@ -53,6 +54,8 @@ The complete ordered implementation checklist is in `IMPLEMENTATION_PLAN.md`. Th
 - [x] Build the Polar-backed daily Timeline: nightly-recovery tiles, a rolling 24-hour continuous-heart-rate chart, and 28-day nightly metric charts.
 - [x] Use date-scoped Timeline events as the implemented manual-context mechanism; they support create, edit, delete, chart-line coloring, and tooltips.
 - [x] Add dated free-text Timeline events through chart double-click, editable and deletable from the Timeline event list, with event-day line coloring and hover details.
+- [x] Add a phone-friendly fixed **Add event** action with explicit date and description fields.
+- [x] Keep all nightly Timeline panels on one shared date domain rather than starting each x-axis at that metric's first value.
 - [x] Add the runtime light/dark theme foundation with local persistence.
 - [x] Add a UI language selector with persisted language preference and translated application text in English, German, and Russian.
 - [x] Create and verify an SQLite online backup with `scripts/backup-database.sh`; it writes timestamped files under `database/backups/`, checks integrity, and documents stopped-service restore steps.
@@ -60,5 +63,5 @@ The complete ordered implementation checklist is in `IMPLEMENTATION_PLAN.md`. Th
 
 ## Documentation Discipline
 
-- [x] Review and synchronize every visible Markdown file in this directory for the 2026-09-03 Training Progress checkpoint.
+- [x] Review and synchronize all 14 visible project Markdown files for the 2026-09-12 graph continuity and mobile-event checkpoint.
 - [ ] Keep `MAIN.md` concise; put detailed research and implementation knowledge in focused documents.

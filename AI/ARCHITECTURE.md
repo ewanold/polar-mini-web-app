@@ -156,7 +156,7 @@ SQLAlchemy / SQLite
 FastAPI JSON response
   │
   ▼
-React state (React Query cache is planned)
+TanStack Query cache and React state
   │
   ▼
 React page renders data/empty state and Apache ECharts synchronized panels

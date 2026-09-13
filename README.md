@@ -42,7 +42,9 @@ For these reasons, I decided to put my Codex account to good use and have an age
 
   ![Timeline](screenshots/timeline.png)
 
-One feature is not immediately obvious: hovering over a chart shows the recorded value at that time. Double-click a data point to add a description of a special event that might affect sleep or recovery. Think of it as a simple diary: for example, you might use it to investigate whether drinking coffee affects your sleep. Hover over the charts to see events recorded for that day. On event days, the affected line segment changes colour.
+One feature is not immediately obvious: hovering over a chart shows the recorded value at that time. Every recorded value has a circle. Missing intervals between recorded values use a dotted connection, and after a successful sync a dotted horizontal line carries the latest known value through the synchronized date instead of ending the time scale early.
+
+Double-click a data point to add a description of a special event that might affect sleep or recovery. Think of it as a simple diary: for example, you might use it to investigate whether drinking coffee affects your sleep. Hover over the charts to see events recorded for that day. On event days, the affected line segment changes colour. On a phone, use the fixed **Add event** button at the bottom of the screen and enter the event date and description directly.
 
 All events are listed at the bottom of the Timeline, where you can edit or delete them.
 
@@ -103,7 +105,8 @@ The complete, GitHub-safe setup guide is [AI/POLAR_AUTH_SETUP.md](AI/POLAR_AUTH_
 
 - The top tiles show the latest nightly value, seven-day average, and comparison where data is available.
 - Hover a chart for an exact value and crosshair.
-- Double-click a Timeline datapoint to create a dated free-text special event. Event dates change the chart line color and the event appears in the hover tooltip; manage existing events at the bottom of the Timeline.
+- Every actual chart value has a circle. Dotted lines identify missing intervals and synchronized carry-forward values rather than presenting them as new measurements.
+- Double-click a Timeline datapoint to create a dated free-text special event. On a phone, use the fixed **Add event** button and enter the date and description. Event dates change the chart line color and the event appears in the hover tooltip; manage existing events at the bottom of the Timeline.
 
 ### Training Progress
 
@@ -115,7 +118,7 @@ The complete, GitHub-safe setup guide is [AI/POLAR_AUTH_SETUP.md](AI/POLAR_AUTH_
 ### Settings
 
 - **Sync now** imports currently available Polar records and reports new, updated, unchanged, and failed records by category.
-- Settings shows the time of the last successful scheduled sync and refreshes that status every minute while open.
+- Settings shows the time of the last successful scheduled or manual sync and refreshes that status every minute while open.
 - After Polar is connected, the in-process scheduler re-syncs every 60 minutes by default. Set `POLAR_APP_SYNC_INTERVAL_MINUTES` in `.env` to change the interval.
 
 ## Backups

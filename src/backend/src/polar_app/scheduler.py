@@ -55,11 +55,12 @@ class PolarScheduler:
                 state = session.get(PolarSyncState, "all")
                 if state is None:
                     return
-                state.last_success_at = datetime.now(UTC) if result["connected"] else None
                 errors = [
                     name
                     for name, value in result["categories"].items()
                     if isinstance(value, dict) and "error" in value
                 ]
+                if result["connected"] and not errors:
+                    state.last_success_at = datetime.now(UTC)
                 state.last_error = ", ".join(errors) if errors else None
                 session.commit()

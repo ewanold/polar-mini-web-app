@@ -168,7 +168,8 @@ td {
 }
 
 select,
-input {
+input,
+textarea {
   min-height: 2.5rem;
   padding: 0.45rem 0.6rem;
   border: 1px solid var(--border);
@@ -229,12 +230,26 @@ input {
 .timeline-events li { display: grid; grid-template-columns: 7rem minmax(0, 1fr) auto auto; gap: .65rem; align-items: center; }
 .timeline-events time { color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
 .timeline-events button { min-height: 2rem; padding: .25rem .6rem; }
+.timeline-add-event { display: grid; justify-items: end; gap: .75rem; margin-top: 1rem; }
+.timeline-add-event-button { min-height: 2.75rem; padding: .65rem 1rem; border: 0; border-radius: 999px; background: var(--accent); color: var(--background); font-weight: 700; cursor: pointer; }
+.timeline-add-event form { display: grid; grid-template-columns: minmax(7rem, auto) minmax(0, 1fr); gap: .65rem; align-items: center; width: min(100%, 34rem); padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; background: var(--background); }
+.timeline-add-event textarea { min-height: 5rem; resize: vertical; }
+.timeline-add-event form > div, .timeline-add-event form > p { grid-column: 1 / -1; }
+.timeline-add-event form > div { display: flex; justify-content: flex-end; gap: .5rem; }
+.timeline-add-event form button { min-height: 2.75rem; padding: .55rem .85rem; }
 .training-charts-frame { position: relative; height: 936px; }
 .training-charts { position: relative; z-index: 1; }
 .training-chart-borders { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .training-chart-borders span { position: absolute; left: 0; right: 0; height: 170px; border: 1px solid var(--border); border-radius: .75rem; background: var(--background); }
 
-@media (max-width: 700px) { .timeline-summary, .timeline-charts { grid-template-columns: 1fr; } }
+@media (max-width: 700px) {
+  .timeline-summary, .timeline-charts { grid-template-columns: 1fr; }
+  .timeline-add-event { justify-items: stretch; }
+  .timeline-add-event-button { position: fixed; right: 1rem; bottom: 1rem; z-index: 6; min-width: 10rem; min-height: 3rem; box-shadow: 0 .5rem 1.5rem rgb(0 0 0 / .2); }
+  .timeline-add-event form { position: fixed; right: .75rem; bottom: 4.75rem; left: .75rem; z-index: 6; grid-template-columns: 1fr; width: auto; max-height: calc(100vh - 6rem); overflow-y: auto; box-shadow: 0 .75rem 2rem rgb(0 0 0 / .3); }
+  .timeline-add-event form > div, .timeline-add-event form > p { grid-column: auto; }
+  .timeline-add-event form > div { display: grid; grid-template-columns: 1fr 1fr; }
+}
 
 @media (max-width: 620px) {
   .app-shell {

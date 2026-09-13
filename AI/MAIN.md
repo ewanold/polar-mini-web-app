@@ -43,8 +43,9 @@ The production build is one browser-accessible web service. It should start repr
 - Retain raw Polar responses together with normalized fields.
 - Use SQLite for the initial single-user application.
 - Use SQLite dotfile locking with rollback journaling by default because the current project storage is a CIFS share; keep the VFS and journal mode configurable for other hosts.
-- Keep normalized sessions indefinitely. The first Training Progress slice calculates mapped-session daily series directly; rebuildable daily, weekly, and monthly aggregate archives remain the next scalability step.
+- Keep normalized sessions indefinitely and maintain rebuildable daily, weekly, and monthly aggregate archives for Training Progress.
 - Use arithmetic means of session values to track changes in a typical session rather than total training volume.
+- Mark actual graph values with circles, bridge internal missing intervals with dotted lines, and use a dotted horizontal carry-forward only through the last successfully synchronized date.
 - Provide runtime light and dark themes.
 - Keep the service private by default; do not expose it publicly without authentication and HTTPS.
 

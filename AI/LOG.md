@@ -92,3 +92,11 @@ Open questions:
 
 - Corrected Training Progress chart value display: total distance is now plotted in kilometers to match its axis title, pace y-axis labels use `mm:ss`, and duration y-axis labels use `h:mm`. Source files and the currently served static chart asset were updated because the production frontend bundle could not be regenerated in this environment.
 - Corrected the Timeline Nightly Recharge tile/chart to use the normalized Polar sleep score stream for the Polar-app-style 0–100 value instead of AccessLink's categorical `nightly_recharge_status` field. The source file and currently served static bundle were patched.
+
+## 2026-09-12
+
+- Standardized all Timeline and Training line charts: small circles identify actual values, dotted segments bridge internal missing intervals, and dotted horizontal carry-forward segments extend only through the last successfully synchronized date.
+- Added nullable `synced_through` metadata to Timeline and Training series responses and made successful manual synchronization update the persisted all-category completion timestamp.
+- Added a phone-friendly fixed **Add event** action at the bottom of the Timeline. Its responsive form accepts an explicit date and free-text description while retaining chart double-click creation and existing edit/delete controls.
+- Verified 53 backend tests, 20 frontend tests, TypeScript, ESLint, the production Vite build, live API metadata, and a 390×844 headless-Chromium Timeline render. Repository-wide Ruff still reports four pre-existing issues in migrations `0006`–`0008`; all changed backend files pass Ruff.
+- Fixed the ANS charge x-axis beginning later than the other nightly charts. Every nightly panel now uses the earliest date containing any nightly metric as its shared start, while retaining null dates before that panel's first actual observation. Nightly tick labels now show compact dates instead of midnight times; the regression is covered by the 21-test frontend suite.

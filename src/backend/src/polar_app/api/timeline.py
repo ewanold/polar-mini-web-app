@@ -13,6 +13,7 @@ from polar_app.models.polar import (
     PolarSleepDay,
     TimelineEvent,
 )
+from polar_app.polar.sync import last_successful_sync_date
 
 router = APIRouter(prefix="/api/timeline", tags=["timeline"])
 
@@ -76,6 +77,7 @@ class TimelineDayResponse(BaseModel):
 class TimelineResponse(BaseModel):
     start: date
     end: date
+    synced_through: date | None
     days: list[TimelineDayResponse]
 
 
@@ -134,6 +136,10 @@ def timeline(
     start: Annotated[date | None, Query()] = None,
     end: Annotated[date | None, Query()] = None,
 ) -> TimelineResponse:
+    with sessions(request)() as session:
+        synced_through = last_successful_sync_date(
+            session, request.app.state.settings.timezone
+        )
     if (start is None) != (end is None):
         raise HTTPException(
             status_code=422,
@@ -153,6 +159,8 @@ def timeline(
         ]
         if latest_sample is not None:
             available_dates.append(latest_sample.sampled_at.date())
+        if synced_through is not None:
+            available_dates.append(synced_through)
         end = max(available_dates, default=date.today())
         start = end - timedelta(days=27)
     assert start is not None and end is not None
@@ -248,4 +256,6 @@ def timeline(
             )
         )
         current_date += timedelta(days=1)
-    return TimelineResponse(start=start, end=end, days=days)
+    return TimelineResponse(
+        start=start, end=end, synced_through=synced_through, days=days
+    )

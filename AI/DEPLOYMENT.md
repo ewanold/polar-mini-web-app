@@ -54,7 +54,7 @@ Polar authorization needs `POLAR_APP_POLAR_CLIENT_ID`, `POLAR_APP_POLAR_CLIENT_S
 - The sync interval is configurable.
 - Scheduling is disabled until Polar authorization succeeds.
 - Sync runs cannot overlap.
-- Each category records last attempt, last success, duration, and error summary.
+- The all-category sync state records last attempt, last successful completion, and an error summary; successful scheduled and manual runs update it.
 - A manual sync endpoint/button remains available.
 
 The initial in-process scheduler assumes exactly one backend worker. Multi-worker or horizontally scaled deployment requires a separate scheduler or distributed locking and is outside the first version.

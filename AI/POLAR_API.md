@@ -87,7 +87,7 @@ The v3 API documentation identifies `accesslink.read_all` as the scope for the r
 - Raw response retention before or atomically with normalization
 - Redaction of tokens and personal payloads from logs
 
-`POST /api/polar/sync` runs the five current v3 categories independently and returns `inserted`, `updated`, `skipped`, and `errors` counts for each. Repeat syncs are idempotent: records with identical raw payloads are reported as skipped/unchanged rather than duplicated. APScheduler invokes the same flow at the configured interval while one backend process is running.
+`POST /api/polar/sync` runs the five current v3 categories independently and returns `inserted`, `updated`, `skipped`, and `errors` counts for each. Repeat syncs are idempotent: records with identical raw payloads are reported as skipped/unchanged rather than duplicated. A manual run with no category exception updates the persisted all-category `last_success_at`, just as a scheduled run does. Timeline and Training series expose its local calendar date as nullable `synced_through` presentation metadata; it does not turn missing provider data into measured values. APScheduler invokes the same flow at the configured interval while one backend process is running.
 
 ## Verified v3 Data Endpoints and Units
 

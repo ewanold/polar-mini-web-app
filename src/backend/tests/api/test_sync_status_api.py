@@ -23,3 +23,24 @@ async def test_polar_status_includes_last_successful_sync(tmp_path) -> None:
 
     assert response.status_code == 200
     assert response.json()["last_success_at"] == "2026-09-06T10:15:00+00:00"
+
+
+@pytest.mark.anyio
+async def test_manual_sync_records_a_successful_completion(tmp_path, monkeypatch) -> None:
+    app = create_app(Settings(database_path=tmp_path / "polar.sqlite3"))
+    Base.metadata.create_all(app.state.engine)
+
+    async def successful_sync(*_args, **_kwargs):
+        return {"connected": True, "categories": {"activity": {"inserted": 0}}}
+
+    monkeypatch.setattr("polar_app.api.sync.synchronize", successful_sync)
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post("/api/polar/sync")
+
+    assert response.status_code == 200
+    with app.state.session_factory() as session:
+        state = session.get(PolarSyncState, "all")
+        assert state is not None
+        assert state.last_success_at is not None
+        assert state.last_error is None

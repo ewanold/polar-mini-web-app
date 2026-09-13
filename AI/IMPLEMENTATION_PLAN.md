@@ -539,7 +539,7 @@ polar-web-app/
 - [x] Keep all panels visible on the same training page, each with an independent border.
 - [x] Use linked crosshairs/tooltips across charts, including empty buckets.
 - [x] Show bucket date range, value, session count, and metric sample count in tooltips.
-- [x] Render gaps for missing values rather than zero lines.
+- [x] Render missing metrics as null rather than zero; mark real values with circles, connect internal gaps with dotted lines, and carry the latest value horizontally only through a successful synchronization date.
 - [x] Format pace as `mm:ss min/km` while keeping numeric values suitable for averaging.
 - [ ] Add responsive layout and horizontal zoom/pan only where it remains understandable.
 - [ ] Use group color as an accent without making it the only identifier.
@@ -569,7 +569,7 @@ polar-web-app/
 - Create `src/frontend/src/features/timeline/TimelinePage.tsx`
 - Create associated tests
 
-**Checkpoint (2026-09-06):** `GET /api/timeline` and `TimelinePage.tsx` serve and render a 28-day Polar-backed recovery timeline. It includes normalized sleep/activity/Nightly Recharge data, continuous heart-rate samples, summary tiles, five 28-day metric charts, and a Daily Heart Rate chart whose visible rolling 24-hour window can move backward across imported data. Date/description Timeline events are the implemented manual-context mechanism: they have create, update, and delete APIs; the UI creates them by double-click, manages them after the charts, colors event-day line segments amber without point markers, and includes descriptions in tooltips.
+**Checkpoint (2026-09-12):** `GET /api/timeline` and `TimelinePage.tsx` serve and render a 28-day Polar-backed recovery timeline. It includes normalized sleep/activity/Nightly Recharge data, continuous-heart-rate samples, summary tiles, five 28-day metric charts, and a Daily Heart Rate chart whose visible rolling 24-hour window can move backward across imported data. Timeline and Training charts mark real values with circles, bridge internal gaps with dotted lines, and render a dotted horizontal carry-forward through nullable `synced_through` metadata. Date/description Timeline events have create, update, and delete APIs; the UI creates them by chart double-click or a phone-friendly fixed **Add event** action with explicit date/description fields, manages them after the charts, colors event-day solid segments amber, and includes descriptions in tooltips.
 
 **Todos:**
 - [x] Return available sleep, recovery, activity, and continuous heart-rate records grouped by local day.

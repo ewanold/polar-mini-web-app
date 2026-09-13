@@ -3,6 +3,7 @@
 from collections.abc import Callable
 from datetime import UTC, date, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import httpx
 from sqlalchemy.orm import Session, sessionmaker
@@ -33,6 +34,16 @@ def connection_status(session: Session) -> dict[str, Any]:
             else None
         ),
     }
+
+
+def last_successful_sync_date(session: Session, timezone: str) -> date | None:
+    state = session.get(PolarSyncState, "all")
+    if state is None or state.last_success_at is None:
+        return None
+    completed_at = state.last_success_at
+    if completed_at.tzinfo is None:
+        completed_at = completed_at.replace(tzinfo=UTC)
+    return completed_at.astimezone(ZoneInfo(timezone)).date()
 
 
 async def synchronize(

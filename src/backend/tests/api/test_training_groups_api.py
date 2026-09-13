@@ -7,6 +7,7 @@ from polar_app.config import Settings
 from polar_app.main import create_app
 from polar_app.models.base import Base
 from polar_app.models.polar import PolarRawPayload, PolarTrainingSession
+from polar_app.models.sync import PolarSyncState
 from polar_app.models.training_aggregates import TrainingAggregate
 
 
@@ -14,6 +15,13 @@ from polar_app.models.training_aggregates import TrainingAggregate
 async def test_training_group_can_be_created_and_listed(tmp_path) -> None:
     app = create_app(Settings(database_path=tmp_path / "polar.sqlite3"))
     Base.metadata.create_all(app.state.engine)
+    with app.state.session_factory.begin() as session:
+        session.add(
+            PolarSyncState(
+                category="all",
+                last_success_at=datetime(2026, 9, 3, 10, 15, tzinfo=UTC),
+            )
+        )
     transport = httpx.ASGITransport(app=app)
 
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
@@ -38,6 +46,7 @@ async def test_training_group_can_be_created_and_listed(tmp_path) -> None:
     assert series.json()["group"] == created.json()
     assert series.json()["range"] == "4w"
     assert series.json()["resolution"] == "day"
+    assert series.json()["synced_through"] == "2026-09-03"
     assert len(series.json()["buckets"]) == 28
     assert all(bucket["session_count"] == 0 for bucket in series.json()["buckets"])
 

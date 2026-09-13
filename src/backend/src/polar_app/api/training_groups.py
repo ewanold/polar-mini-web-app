@@ -17,6 +17,7 @@ from polar_app.aggregation.rebuild import rebuild_group_buckets
 from polar_app.models.polar import PolarTrainingSession
 from polar_app.models.training_aggregates import TrainingAggregate
 from polar_app.models.training_groups import MappingState, PolarSportTypeMapping, TrainingGroup
+from polar_app.polar.sync import last_successful_sync_date
 
 router = APIRouter(prefix="/api/training", tags=["training"])
 
@@ -47,6 +48,7 @@ class TrainingSeriesResponse(BaseModel):
     resolution: Literal["day", "week", "month"]
     timezone: str
     aggregation_method: Literal["arithmetic_mean_per_session"] = "arithmetic_mean_per_session"
+    synced_through: date | None
     buckets: list["TrainingBucketResponse"]
 
 
@@ -287,6 +289,9 @@ def training_series(
             range=range,
             resolution=resolution,
             timezone=request.app.state.settings.timezone,
+            synced_through=last_successful_sync_date(
+                session, request.app.state.settings.timezone
+            ),
             buckets=buckets,
         )
 

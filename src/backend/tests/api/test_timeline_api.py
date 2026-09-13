@@ -12,6 +12,7 @@ from polar_app.models.polar import (
     PolarRawPayload,
     PolarSleepDay,
 )
+from polar_app.models.sync import PolarSyncState
 
 
 @pytest.mark.anyio
@@ -69,6 +70,7 @@ async def test_timeline_returns_ordered_daily_sleep_activity_and_heart_rate_data
     assert response.json() == {
         "start": "2026-09-01",
         "end": "2026-09-02",
+        "synced_through": None,
         "days": [
             {
                 "date": "2026-09-01",
@@ -174,3 +176,44 @@ async def test_timeline_event_can_be_deleted(tmp_path) -> None:
 
     assert deleted.status_code == 204
     assert timeline.json()["days"][0]["events"] == []
+
+
+@pytest.mark.anyio
+async def test_default_timeline_extends_to_the_last_successfully_synchronized_date(
+    tmp_path,
+) -> None:
+    app = create_app(Settings(database_path=tmp_path / "polar.sqlite3"))
+    Base.metadata.create_all(app.state.engine)
+    with app.state.session_factory.begin() as session:
+        raw = PolarRawPayload(
+            endpoint="/test/timeline",
+            external_id="timeline-sync-source",
+            fetched_at=datetime.now(UTC),
+            payload_json={"source": "test"},
+            content_hash="b" * 64,
+        )
+        session.add(raw)
+        session.flush()
+        session.add(
+            PolarActivityDay(
+                activity_date=date(2026, 9, 1),
+                active_steps=9_840,
+                active_calories=612,
+                raw_payload_id=raw.id,
+            )
+        )
+        session.add(
+            PolarSyncState(
+                category="all",
+                last_success_at=datetime(2026, 9, 3, 10, 15, tzinfo=UTC),
+            )
+        )
+
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.get("/api/timeline")
+
+    assert response.status_code == 200
+    assert response.json()["end"] == "2026-09-03"
+    assert response.json()["synced_through"] == "2026-09-03"
+    assert response.json()["days"][-1]["date"] == "2026-09-03"

@@ -2,6 +2,7 @@ import ReactECharts from "echarts-for-react";
 import { useEffect, useRef } from "react";
 
 import { TrainingSeries } from "../../api/training";
+import { categoryLineSeries } from "../../components/chartSeries";
 import { useLanguage } from "../../i18n/useLanguage";
 import { formatMetricTooltipValue } from "./trainingChartFormatting";
 
@@ -37,6 +38,10 @@ export function TrainingCharts({ series, color, onSelect }: { series: TrainingSe
     { label: t("durationPaceIndex"), field: "average_duration_pace_index", value: (bucket) => bucket.average_duration_pace_index, format: (value) => value.toFixed(2) },
   ];
   const axisNames = [t("totalDistanceAxis"), t("meanHeartRateAxis"), t("meanPaceAxis"), t("meanDurationAxis"), t("durationPaceIndex")];
+  const syncedThroughIndex = series.synced_through === null ? null : series.buckets.reduce(
+    (target, bucket, index) => bucket.date <= series.synced_through! ? index : target,
+    -1,
+  );
   useEffect(() => {
     const chart = chartRef.current?.getEchartsInstance();
     const renderer = chart?.getZr();
@@ -55,7 +60,15 @@ export function TrainingCharts({ series, color, onSelect }: { series: TrainingSe
     xAxis: metrics.map((_, index) => ({ type: "category", data: labels, gridIndex: index, axisLabel: { show: true, hideOverlap: true }, axisPointer: { show: true, snap: false, triggerTooltip: true } })),
     yAxis: metrics.map((metric, index) => ({ type: "value", name: axisNames[index], gridIndex: index, scale: true, axisLabel: { formatter: (value: number) => metric.axisFormat ? metric.axisFormat(value) : String(Math.round(value * 100) / 100) } })),
     series: [
-      ...metrics.map((metric, index) => ({ name: metric.label, type: "line", xAxisIndex: index, yAxisIndex: index, connectNulls: false, showSymbol: true, symbolSize: 7, lineStyle: { color }, itemStyle: { color }, data: series.buckets.map((bucket) => metric.value(bucket)) })),
+      ...metrics.flatMap((metric, index) => categoryLineSeries({
+        idPrefix: metric.field,
+        name: metric.label,
+        values: series.buckets.map((bucket) => metric.value(bucket)),
+        color,
+        xAxisIndex: index,
+        yAxisIndex: index,
+        syncedThroughIndex: syncedThroughIndex === null || syncedThroughIndex < 0 ? null : syncedThroughIndex,
+      })),
       ...metrics.map((metric, index) => { const anchor = series.buckets.map((bucket) => metric.value(bucket)).find((value) => value !== null) ?? 0; return { name: `__pointer-${index}`, type: "line", xAxisIndex: index, yAxisIndex: index, silent: true, showSymbol: false, lineStyle: { opacity: 0 }, itemStyle: { opacity: 0 }, tooltip: { show: false }, data: series.buckets.map((bucket) => metric.value(bucket) ?? anchor) }; }),
     ],
   }} onEvents={{ click: (event: { dataIndex?: number }) => { if (event.dataIndex !== undefined) onSelect(event.dataIndex); } }} />

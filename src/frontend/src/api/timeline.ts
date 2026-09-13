@@ -20,7 +20,7 @@ export type TimelineDay = {
   heart_rate: TimelineHeartRate | null;
   events: TimelineEvent[];
 };
-export type Timeline = { start: string; end: string; days: TimelineDay[] };
+export type Timeline = { start: string; end: string; synced_through: string | null; days: TimelineDay[] };
 
 export function useTimeline() {
   return useQuery({
