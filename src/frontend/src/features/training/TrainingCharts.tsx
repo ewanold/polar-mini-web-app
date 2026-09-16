@@ -6,7 +6,7 @@ import { categoryLineSeries } from "../../components/chartSeries";
 import { useLanguage } from "../../i18n/useLanguage";
 import { formatMetricTooltipValue } from "./trainingChartFormatting";
 
-type MetricField = keyof Pick<TrainingSeries["buckets"][number], "total_distance_meters" | "average_heart_rate" | "average_pace_seconds_per_kilometer" | "average_duration_seconds" | "average_duration_pace_index">;
+type MetricField = keyof Pick<TrainingSeries["buckets"][number], "total_distance_meters" | "average_heart_rate" | "average_pace_seconds_per_kilometer" | "average_duration_seconds" | "average_distance_pace_index">;
 
 type Metric = {
   label: string;
@@ -35,9 +35,9 @@ export function TrainingCharts({ series, color, onSelect }: { series: TrainingSe
     { label: t("meanHeartRate"), field: "average_heart_rate", value: (bucket) => bucket.average_heart_rate, format: (value) => t("beatsPerMinuteValue", { value: Math.round(value) }) },
     { label: t("meanPace"), field: "average_pace_seconds_per_kilometer", value: (bucket) => bucket.average_pace_seconds_per_kilometer, format: (value) => t("paceValue", { value: formatMinutesSeconds(value) }), axisFormat: formatMinutesSeconds },
     { label: t("meanDuration"), field: "average_duration_seconds", value: (bucket) => bucket.average_duration_seconds, format: formatHoursMinutes, axisFormat: formatHoursMinutes },
-    { label: t("durationPaceIndex"), field: "average_duration_pace_index", value: (bucket) => bucket.average_duration_pace_index, format: (value) => value.toFixed(2) },
+    { label: t("distancePaceIndex"), field: "average_distance_pace_index", value: (bucket) => bucket.average_distance_pace_index, format: (value) => value.toFixed(3) },
   ];
-  const axisNames = [t("totalDistanceAxis"), t("meanHeartRateAxis"), t("meanPaceAxis"), t("meanDurationAxis"), t("durationPaceIndex")];
+  const axisNames = [t("totalDistanceAxis"), t("meanHeartRateAxis"), t("meanPaceAxis"), t("meanDurationAxis"), t("distancePaceIndex")];
   const syncedThroughIndex = series.synced_through === null ? null : series.buckets.reduce(
     (target, bucket, index) => bucket.date <= series.synced_through! ? index : target,
     -1,

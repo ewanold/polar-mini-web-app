@@ -30,9 +30,10 @@ def calculate_training_aggregate(
     average_duration, average_duration_sample_count = average_with_sample_count(
         session.duration_seconds for session in bucket_sessions
     )
-    average_index, average_index_sample_count = average_with_sample_count(
-        session.duration_pace_index for session in bucket_sessions
-    )
+    (
+        average_distance_pace_index,
+        average_distance_pace_index_sample_count,
+    ) = average_with_sample_count(session.distance_pace_index for session in bucket_sessions)
     distances = [
         session.distance_meters
         for session in bucket_sessions
@@ -53,8 +54,8 @@ def calculate_training_aggregate(
         average_pace_sample_count=average_pace_sample_count,
         average_duration_seconds=average_duration,
         average_duration_sample_count=average_duration_sample_count,
-        average_duration_pace_index=average_index,
-        average_duration_pace_index_sample_count=average_index_sample_count,
+        average_distance_pace_index=average_distance_pace_index,
+        average_distance_pace_index_sample_count=average_distance_pace_index_sample_count,
     )
 
 

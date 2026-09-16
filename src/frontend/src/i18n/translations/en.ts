@@ -64,7 +64,7 @@ export const en = {
   meanHeartRate: "Mean heart rate",
   meanPace: "Mean pace",
   meanDuration: "Mean duration",
-  durationPaceIndex: "Duration / pace index",
+  distancePaceIndex: "Total distance / pace index",
   totalDistance: "Total distance",
   totalDistanceAxis: "Total distance (km)",
   kilometerValue: "{value} km",

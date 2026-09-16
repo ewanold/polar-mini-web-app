@@ -20,10 +20,12 @@ describe("TrainingCharts", () => {
       average_pace_seconds_per_kilometer: null,
       average_duration_seconds: null,
       average_duration_pace_index: null,
+      average_distance_pace_index: heartRate === null ? null : 0.02,
       average_heart_rate_sample_count: heartRate === null ? 0 : 1,
       average_pace_sample_count: 0,
       average_duration_sample_count: 0,
       average_duration_pace_index_sample_count: 0,
+      average_distance_pace_index_sample_count: heartRate === null ? 0 : 1,
     });
     const series = {
       group: { id: 1, name: "Running", color: "#006f7b" },
@@ -42,6 +44,9 @@ describe("TrainingCharts", () => {
       expect.objectContaining({ id: "average_heart_rate-actual-points", type: "scatter", symbol: "circle", data: [140, null, 145, null] }),
       expect.objectContaining({ id: "average_heart_rate-missing-gap-0", lineStyle: expect.objectContaining({ type: "dotted" }), data: [140, null, 145, null] }),
       expect.objectContaining({ id: "average_heart_rate-carry-forward", lineStyle: expect.objectContaining({ type: "dotted" }), data: [null, null, 145, 145] }),
+    ]));
+    expect(chartSeries).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "average_distance_pace_index-actual-points", data: [0.02, null, 0.02, null] }),
     ]));
   });
 });

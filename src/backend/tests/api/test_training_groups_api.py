@@ -72,9 +72,10 @@ async def test_observed_sport_type_can_be_mapped_to_a_training_group(tmp_path) -
                 started_at=datetime(2026, 9, 2, tzinfo=UTC),
                 local_date=date(2026, 9, 2),
                 duration_seconds=1800,
+                distance_meters=5000,
                 average_heart_rate=140,
                 average_pace_seconds_per_kilometer=360,
-                duration_pace_index=5,
+                distance_pace_index=5000 / 360,
                 raw_payload_id=raw.id,
             )
         )
@@ -113,15 +114,15 @@ async def test_observed_sport_type_can_be_mapped_to_a_training_group(tmp_path) -
             "date": "2026-09-01",
             "end_date": "2026-10-01",
             "session_count": 1,
-            "total_distance_meters": None,
+            "total_distance_meters": 5000,
             "average_heart_rate": 140,
             "average_pace_seconds_per_kilometer": 360,
             "average_duration_seconds": 1800,
-            "average_duration_pace_index": 5,
+            "average_distance_pace_index": 5000 / 360,
             "average_heart_rate_sample_count": 1,
             "average_pace_sample_count": 1,
             "average_duration_sample_count": 1,
-            "average_duration_pace_index_sample_count": 1,
+            "average_distance_pace_index_sample_count": 1,
         }
     ]
     assert bucket_sessions.json() == [
@@ -132,7 +133,7 @@ async def test_observed_sport_type_can_be_mapped_to_a_training_group(tmp_path) -
             "duration_seconds": 1800,
             "average_heart_rate": 140,
             "average_pace_seconds_per_kilometer": 360,
-            "duration_pace_index": 5,
+            "distance_pace_index": 5000 / 360,
         }
     ]
     with app.state.session_factory() as session:

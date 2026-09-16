@@ -38,3 +38,7 @@ class TrainingAggregate(Base):
     average_duration_pace_index_sample_count: Mapped[int] = mapped_column(
         Integer, nullable=False, default=0
     )
+    average_distance_pace_index: Mapped[float | None] = mapped_column(Float)
+    average_distance_pace_index_sample_count: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0
+    )

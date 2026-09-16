@@ -66,7 +66,7 @@ export const ru = {
   meanHeartRate: "Средняя частота пульса",
   meanPace: "Средний темп",
   meanDuration: "Средняя продолжительность",
-  durationPaceIndex: "Индекс продолжительности/темпа",
+  distancePaceIndex: "Индекс общей дистанции/темпа",
   totalDistance: "Общая дистанция",
   totalDistanceAxis: "Общая дистанция (км)",
   kilometerValue: "{value} км",

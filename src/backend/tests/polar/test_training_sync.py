@@ -52,6 +52,7 @@ def test_training_import_normalizes_duration_speed_pace_and_is_idempotent(tmp_pa
     assert training.average_speed_meters_per_second == 2.7777777777777777
     assert training.average_pace_seconds_per_kilometer == 360
     assert training.duration_pace_index == 5
+    assert training.distance_pace_index == 5000 / 360
     assert training.sport_type == "RUNNING_TRAIL"
     engine.dispose()
 

@@ -12,7 +12,7 @@ def session(
     heart_rate: int | None = None,
     pace: float | None = None,
     duration: int | None = None,
-    index: float | None = None,
+    distance_pace_index: float | None = None,
     distance: float | None = None,
 ) -> PolarTrainingSession:
     return PolarTrainingSession(
@@ -23,7 +23,7 @@ def session(
         average_heart_rate=heart_rate,
         average_pace_seconds_per_kilometer=pace,
         duration_seconds=duration,
-        duration_pace_index=index,
+        distance_pace_index=distance_pace_index,
         distance_meters=distance,
         raw_payload_id=1,
     )
@@ -38,14 +38,21 @@ def test_calculation_averages_each_metric_from_available_sessions() -> None:
         sessions=[
             session(
                 "one", date(2026, 9, 2), heart_rate=120, pace=300,
-                duration=1800, index=6, distance=5000,
+                duration=1800, distance_pace_index=5000 / 300, distance=5000,
             ),
             session("two", date(2026, 9, 2), pace=360, distance=2000),
             session(
                 "three", date(2026, 9, 2), heart_rate=150, duration=2400,
-                index=5.5, distance=3000,
+                distance=3000,
             ),
-            session("outside", date(2026, 9, 3), heart_rate=210, pace=120, duration=600, index=5),
+            session(
+                "outside",
+                date(2026, 9, 3),
+                heart_rate=210,
+                pace=120,
+                duration=600,
+                distance_pace_index=0.025,
+            ),
         ],
     )
 
@@ -57,8 +64,8 @@ def test_calculation_averages_each_metric_from_available_sessions() -> None:
     assert aggregate.average_pace_sample_count == 2
     assert aggregate.average_duration_seconds == 2100
     assert aggregate.average_duration_sample_count == 2
-    assert aggregate.average_duration_pace_index == 5.75
-    assert aggregate.average_duration_pace_index_sample_count == 2
+    assert aggregate.average_distance_pace_index == 5000 / 300
+    assert aggregate.average_distance_pace_index_sample_count == 1
     assert aggregate.total_distance_meters == 10_000
 
 
@@ -91,5 +98,5 @@ def test_calculation_preserves_null_metric_values_and_zero_sample_counts() -> No
     assert aggregate.average_pace_sample_count == 0
     assert aggregate.average_duration_seconds is None
     assert aggregate.average_duration_sample_count == 0
-    assert aggregate.average_duration_pace_index is None
-    assert aggregate.average_duration_pace_index_sample_count == 0
+    assert aggregate.average_distance_pace_index is None
+    assert aggregate.average_distance_pace_index_sample_count == 0

@@ -60,11 +60,11 @@ class TrainingBucketResponse(BaseModel):
     average_heart_rate: float | None
     average_pace_seconds_per_kilometer: float | None
     average_duration_seconds: float | None
-    average_duration_pace_index: float | None
+    average_distance_pace_index: float | None
     average_heart_rate_sample_count: int
     average_pace_sample_count: int
     average_duration_sample_count: int
-    average_duration_pace_index_sample_count: int
+    average_distance_pace_index_sample_count: int
 
 
 class TrainingSessionResponse(BaseModel):
@@ -74,7 +74,7 @@ class TrainingSessionResponse(BaseModel):
     duration_seconds: int | None
     average_heart_rate: int | None
     average_pace_seconds_per_kilometer: float | None
-    duration_pace_index: float | None
+    distance_pace_index: float | None
 
 
 class SportTypeMappingResponse(BaseModel):
@@ -331,7 +331,7 @@ def bucket_sessions(
                 duration_seconds=row.duration_seconds,
                 average_heart_rate=row.average_heart_rate,
                 average_pace_seconds_per_kilometer=row.average_pace_seconds_per_kilometer,
-                duration_pace_index=row.duration_pace_index,
+                distance_pace_index=row.distance_pace_index,
             )
             for row in rows
         ]
@@ -363,11 +363,11 @@ def serialize_bucket(bucket: Bucket, aggregate: TrainingAggregate | None) -> Tra
             average_heart_rate=None,
             average_pace_seconds_per_kilometer=None,
             average_duration_seconds=None,
-            average_duration_pace_index=None,
+            average_distance_pace_index=None,
             average_heart_rate_sample_count=0,
             average_pace_sample_count=0,
             average_duration_sample_count=0,
-            average_duration_pace_index_sample_count=0,
+            average_distance_pace_index_sample_count=0,
         )
     return TrainingBucketResponse(
         date=bucket.start,
@@ -377,9 +377,9 @@ def serialize_bucket(bucket: Bucket, aggregate: TrainingAggregate | None) -> Tra
         average_heart_rate=aggregate.average_heart_rate,
         average_pace_seconds_per_kilometer=aggregate.average_pace_seconds_per_kilometer,
         average_duration_seconds=aggregate.average_duration_seconds,
-        average_duration_pace_index=aggregate.average_duration_pace_index,
+        average_distance_pace_index=aggregate.average_distance_pace_index,
         average_heart_rate_sample_count=aggregate.average_heart_rate_sample_count,
         average_pace_sample_count=aggregate.average_pace_sample_count,
         average_duration_sample_count=aggregate.average_duration_sample_count,
-        average_duration_pace_index_sample_count=aggregate.average_duration_pace_index_sample_count,
+        average_distance_pace_index_sample_count=aggregate.average_distance_pace_index_sample_count,
     )

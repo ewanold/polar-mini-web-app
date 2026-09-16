@@ -6,12 +6,12 @@ export type TrainingBucket = {
   date: string; end_date: string; session_count: number;
   total_distance_meters: number | null;
   average_heart_rate: number | null; average_pace_seconds_per_kilometer: number | null;
-  average_duration_seconds: number | null; average_duration_pace_index: number | null;
+  average_duration_seconds: number | null; average_distance_pace_index: number | null;
   average_heart_rate_sample_count: number; average_pace_sample_count: number;
-  average_duration_sample_count: number; average_duration_pace_index_sample_count: number;
+  average_duration_sample_count: number; average_distance_pace_index_sample_count: number;
 };
 export type TrainingSeries = { group: TrainingGroup; range: TrainingRange; resolution: "day" | "week" | "month"; timezone: string; aggregation_method: "arithmetic_mean_per_session"; synced_through: string | null; buckets: TrainingBucket[] };
-export type TrainingSession = { external_id: string; local_date: string; sport_type: string; duration_seconds: number | null; average_heart_rate: number | null; average_pace_seconds_per_kilometer: number | null; duration_pace_index: number | null };
+export type TrainingSession = { external_id: string; local_date: string; sport_type: string; duration_seconds: number | null; average_heart_rate: number | null; average_pace_seconds_per_kilometer: number | null; distance_pace_index: number | null };
 
 async function request<T>(url: string): Promise<T> {
   const response = await fetch(url);

@@ -48,6 +48,7 @@ class PolarTrainingSession(Base):
     average_speed_meters_per_second: Mapped[float | None] = mapped_column(Float)
     average_pace_seconds_per_kilometer: Mapped[float | None] = mapped_column(Float)
     duration_pace_index: Mapped[float | None] = mapped_column(Float)
+    distance_pace_index: Mapped[float | None] = mapped_column(Float)
     average_heart_rate: Mapped[int | None] = mapped_column(Integer)
     maximum_heart_rate: Mapped[int | None] = mapped_column(Integer)
     calories: Mapped[int | None] = mapped_column(Integer)

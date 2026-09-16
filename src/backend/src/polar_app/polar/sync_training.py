@@ -142,6 +142,7 @@ def import_training_payload(session: Session, payload: dict[str, Any], *, timezo
     speed = duration_seconds and distance / duration_seconds if distance else None
     pace = 1000 / speed if speed and speed > 0 else None
     duration_pace_index = duration_seconds / 60 / (pace / 60) if pace and pace > 0 else None
+    distance_pace_index = distance / pace if distance and pace and pace > 0 else None
     heart_rate = payload.get("heart_rate")
     if not isinstance(heart_rate, dict):
         heart_rate = {}
@@ -182,6 +183,7 @@ def import_training_payload(session: Session, payload: dict[str, Any], *, timezo
         "average_speed_meters_per_second": speed,
         "average_pace_seconds_per_kilometer": pace,
         "duration_pace_index": duration_pace_index,
+        "distance_pace_index": distance_pace_index,
         "average_heart_rate": integer_or_none(heart_rate.get("average")),
         "maximum_heart_rate": integer_or_none(heart_rate.get("maximum")),
         "calories": integer_or_none(payload.get("calories")),
