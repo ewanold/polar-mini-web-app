@@ -14,6 +14,7 @@ from polar_app.models.sync import PolarSyncState
 from polar_app.polar.client import PolarClient
 from polar_app.polar.sync_daily import (
     sync_activity,
+    sync_cardio_load,
     sync_continuous_heart_rate,
     sync_nightly_recharge,
     sync_sleep,
@@ -60,6 +61,7 @@ async def synchronize(
     start = end - timedelta(days=27)
     categories: dict[str, Callable[[Session], Any]] = {
         "training": lambda session: sync_training(session, client, timezone=settings.timezone),
+        "cardio_load": lambda session: sync_cardio_load(session, client),
         "sleep": lambda session: sync_sleep(session, client),
         "nightly_recharge": lambda session: sync_nightly_recharge(session, client),
         "activity": lambda session: sync_activity(session, client, start, end),

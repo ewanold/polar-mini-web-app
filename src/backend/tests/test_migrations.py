@@ -19,7 +19,7 @@ def test_initial_migration_upgrades_an_empty_database(tmp_path: Path) -> None:
         revision = connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one()
     engine.dispose()
 
-    assert revision == "0010"
+    assert revision == "0011"
 
 
 def test_migration_uses_application_database_environment(
@@ -36,7 +36,7 @@ def test_migration_uses_application_database_environment(
         revision = connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one()
     engine.dispose()
 
-    assert revision == "0010"
+    assert revision == "0011"
 
 
 def test_polar_source_data_migration_creates_required_tables(tmp_path: Path) -> None:
@@ -52,9 +52,10 @@ def test_polar_source_data_migration_creates_required_tables(tmp_path: Path) -> 
         revision = connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one()
     engine.dispose()
 
-    assert revision == "0010"
+    assert revision == "0011"
     assert {
         "polar_raw_payloads",
+        "polar_cardio_load",
         "polar_training_sessions",
         "polar_sleep_days",
         "polar_nightly_recharge",

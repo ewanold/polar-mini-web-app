@@ -107,3 +107,9 @@ The v3 API documentation identifies `accesslink.read_all` as the scope for the r
 ## Deferred Future Extensions
 
 LAN callback-host acceptance is not needed for the current application because Polar OAuth remains on the server's registered `localhost` callback. AccessLink Dynamic API v4 is intentionally not implemented; verify its endpoint/payload contract only before a future v4 feature is added.
+
+## Cardio Load (2026-10-25)
+
+Regular manual and scheduled synchronization now imports the last 28 days from `GET /v3/users/cardio-load`. Its response is a list of daily objects. Each daily raw response is retained and normalized idempotently into `polar_cardio_load`; source changes update the existing date. Missing strain/tolerance remain null, and zero remains zero. Strain represents average daily cardio load over 7 days; tolerance uses 28 days. These are Polar-provided values, independent of training-group mappings. Existing installations migrate with `alembic upgrade head` on native startup; the next sync populates the Training Progress chart.
+
+Source: [Polar AccessLink Cardio load documentation](https://www.polar.com/accesslink-api/#cardio-load), checked 2026-10-25 against the current official documentation and the repository's OpenAPI reference.

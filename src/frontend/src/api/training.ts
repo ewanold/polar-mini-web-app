@@ -30,3 +30,12 @@ export function useTrainingSeries(groupId: number | null, range: TrainingRange) 
 export function useBucketSessions(groupId: number | null, start: string | null, end: string | null) {
   return useQuery({ queryKey: ["training-bucket-sessions", groupId, start, end], queryFn: () => request<TrainingSession[]>(`/api/training/groups/${groupId}/sessions?start=${start}&end=${end}`), enabled: groupId !== null && start !== null && end !== null });
 }
+
+export type CardioLoadSeries = {
+  start: string; end: string; synced_through: string | null;
+  days: { date: string; cardio_load: { strain: number | null; tolerance: number | null } | null }[];
+};
+
+export function useCardioLoad(range: TrainingRange) {
+  return useQuery({ queryKey: ["cardio-load", range], queryFn: () => request<CardioLoadSeries>(`/api/training/cardio-load?range=${range}`) });
+}

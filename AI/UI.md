@@ -63,6 +63,10 @@ Chart behavior:
 
 The reference image contains stacked panels for heart rate, pace, and elevation with synchronized horizontal time alignment and restrained grid lines. It is inspiration, not a fixed visual specification. Elevation is not part of the initial accumulated page unless later requested.
 
+A full-width **Cardio load** chart follows the five Training Progress charts. It overlays Polar's **Strain (7 days)** and **Tolerance (28 days)** values, with separate colors, a legend, date axis, and TRIMP axis. Values come directly from Polar, including valid zeros; unavailable components remain missing. The existing circle/dotted-gap/carry-forward conventions also apply. The chart uses the selected Training range (`4 weeks`, `6 months`, or `All`) and shows a localized empty message until cardio load is imported. Labels and synchronization-category names are translated into English, German, and Russian.
+
+Cardio load describes overall training and is independent of the selected training group. Its Polar daily averages remain daily values in every range.
+
 ## Training-Type Mapping Page
 
 The Mapping page creates and lists groups, displays every observed Polar sport type with session count/current mapping, warns about unmapped sessions, and assigns each type to a group, `ignored`, or `unmapped`. Group deletion requires explicit reassignment or unmapping of its mapped sport types; the corresponding aggregates are rebuilt or removed safely.

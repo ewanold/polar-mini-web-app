@@ -8,6 +8,8 @@ import { BucketSessions } from "./BucketSessions";
 
 const TrainingCharts = lazy(async () => ({ default: (await import("./TrainingCharts")).TrainingCharts }));
 
+const CardioLoadChart = lazy(async () => ({ default: (await import("./CardioLoadChart")).CardioLoadChart }));
+
 const ranges: { value: TrainingRange; label: TranslationKey }[] = [
   { value: "4w", label: "range4Weeks" }, { value: "6m", label: "range6Months" }, { value: "all", label: "rangeAll" },
 ];
@@ -57,5 +59,6 @@ export function TrainingPage() {
     {series && series.buckets.some((bucket) => bucket.session_count > 0) ? <p>{t("bucketsAvailable", { count: series.buckets.length, resolution: t(resolutionKeys[series.resolution]) })}</p> : null}
     {series && group && series.buckets.some((bucket) => bucket.session_count > 0) ? <Suspense fallback={<p>{t("loadingCharts")}</p>}><TrainingCharts series={series} color={group.color} onSelect={setSelectedBucket} /></Suspense> : null}
     {series && group && selectedBucket !== null && series.buckets[selectedBucket] ? <BucketSessions groupId={group.id} start={series.buckets[selectedBucket].date} end={series.buckets[selectedBucket].end_date} /> : null}
+    <Suspense fallback={<p>{t("loadingCharts")}</p>}><CardioLoadChart range={range} /></Suspense>
   </section>;
 }

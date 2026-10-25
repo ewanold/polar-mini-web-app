@@ -122,3 +122,7 @@ The purpose is to show changes in a typical session, not accumulated training vo
 - SQLite foreign keys are enabled. The current CIFS deployment defaults to the `unix-dotfile` VFS and `DELETE` journal mode because normal byte-range locking fails on the share; WAL remains an opt-in setting for compatible local filesystems.
 - Schema changes use Alembic migrations.
 - Backups must use SQLite's online backup mechanism and be integrity-checked.
+
+## Daily Cardio Load
+
+Schema revision `0011` adds `polar_cardio_load`, keyed by a unique `load_date`, with nullable `strain` and `tolerance` and a foreign key to the retained raw payload. `GET /api/training/cardio-load?range=4w|6m|all` serves dated components over the selected Training range, independently of group mappings. Values are provided by Polar rather than calculated from locally imported exercises, which may have incomplete history.

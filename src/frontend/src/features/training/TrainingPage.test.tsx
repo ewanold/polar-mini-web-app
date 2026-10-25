@@ -7,6 +7,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { LanguageProvider } from "../../i18n/LanguageProvider";
 import { TrainingPage } from "./TrainingPage";
 
+vi.mock("./CardioLoadChart", () => ({ CardioLoadChart: ({ range }: { range: string }) => <div data-testid="cardio-load" data-range={range}>Cardio load</div> }));
+
 function renderPage() {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(<LanguageProvider><QueryClientProvider client={queryClient}><BrowserRouter><TrainingPage /></BrowserRouter></QueryClientProvider></LanguageProvider>);
@@ -44,5 +46,6 @@ describe("TrainingPage", () => {
     renderPage();
     await user.click(await screen.findByRole("button", { name: "All" }));
     expect(window.location.search).toBe("?range=all&group=1");
+    expect(await screen.findByTestId("cardio-load")).toHaveAttribute("data-range", "all");
   });
 });

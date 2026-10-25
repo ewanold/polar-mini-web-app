@@ -100,3 +100,11 @@ Open questions:
 - Added a phone-friendly fixed **Add event** action at the bottom of the Timeline. Its responsive form accepts an explicit date and free-text description while retaining chart double-click creation and existing edit/delete controls.
 - Verified 53 backend tests, 20 frontend tests, TypeScript, ESLint, the production Vite build, live API metadata, and a 390×844 headless-Chromium Timeline render. Repository-wide Ruff still reports four pre-existing issues in migrations `0006`–`0008`; all changed backend files pass Ruff.
 - Fixed the ANS charge x-axis beginning later than the other nightly charts. Every nightly panel now uses the earliest date containing any nightly metric as its shared start, while retaining null dates before that panel's first actual observation. Nightly tick labels now show compact dates instead of midnight times; the regression is covered by the 21-test frontend suite.
+
+## 2026-10-25
+
+- Added a bottom Training Progress Cardio load chart overlaying Polar strain (7-day average) and tolerance (28-day average), with translated labels, a legend, hover values, and the existing actual-point/dotted-continuity conventions.
+- Added schema revision `0011`, idempotent daily/raw cardio load import in regular sync, and a range-aware Training cardio load API; source data is used without reconstructing missing training history.
+- Verified all 22 frontend tests, TypeScript, ESLint, production build, focused backend cardio/Timeline/migration tests, and changed-file Ruff. The full backend suite has 53 passing tests and one pre-existing date-dependent Training API expectation (September fixture versus current October). In-app browser inspection was unavailable in this session.
+
+- Corrected chart placement to the Training page following user clarification, removed the Timeline UI/API additions, and made cardio load follow the Training range controls independently of training group.

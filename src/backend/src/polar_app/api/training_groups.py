@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response, status
@@ -14,7 +14,7 @@ from polar_app.aggregation.buckets import (
     recent_week_buckets,
 )
 from polar_app.aggregation.rebuild import rebuild_group_buckets
-from polar_app.models.polar import PolarTrainingSession
+from polar_app.models.polar import PolarCardioLoad, PolarTrainingSession
 from polar_app.models.training_aggregates import TrainingAggregate
 from polar_app.models.training_groups import MappingState, PolarSportTypeMapping, TrainingGroup
 from polar_app.polar.sync import last_successful_sync_date
@@ -383,3 +383,40 @@ def serialize_bucket(bucket: Bucket, aggregate: TrainingAggregate | None) -> Tra
         average_duration_sample_count=aggregate.average_duration_sample_count,
         average_distance_pace_index_sample_count=aggregate.average_distance_pace_index_sample_count,
     )
+
+
+class CardioLoadDayResponse(BaseModel):
+    date: date
+    cardio_load: dict[str, float | None]
+
+
+class CardioLoadSeriesResponse(BaseModel):
+    start: date
+    end: date
+    synced_through: date | None
+    days: list[CardioLoadDayResponse]
+
+
+@router.get("/cardio-load", response_model=CardioLoadSeriesResponse)
+def cardio_load_series(
+    request: Request, range: Literal["4w", "6m", "all"] = "4w"
+) -> CardioLoadSeriesResponse:
+    end = date.today()
+    with sessions(request)() as session:
+        if range == "4w":
+            start = end - timedelta(days=27)
+        elif range == "6m":
+            start = recent_week_buckets(end)[0].start
+        else:
+            first = session.query(func.min(PolarCardioLoad.load_date)).scalar()
+            start = min(first, end).replace(day=1) if first else end.replace(day=1)
+        rows = session.query(PolarCardioLoad).filter(
+            PolarCardioLoad.load_date >= start, PolarCardioLoad.load_date <= end
+        ).order_by(PolarCardioLoad.load_date).all()
+        return CardioLoadSeriesResponse(
+            start=start, end=end,
+            synced_through=last_successful_sync_date(session, request.app.state.settings.timezone),
+            days=[CardioLoadDayResponse(
+                date=row.load_date, cardio_load={"strain": row.strain, "tolerance": row.tolerance}
+            ) for row in rows],
+        )

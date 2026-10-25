@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from polar_app.models.polar import (
     PolarActivityDay,
+    PolarCardioLoad,
     PolarHeartRateSample,
     PolarNightlyRecharge,
     PolarRawPayload,
@@ -218,3 +219,28 @@ def sleep_duration(payload: dict[str, Any]) -> int | None:
     start = parse_datetime(payload.get("sleep_start_time"))
     end = parse_datetime(payload.get("sleep_end_time"))
     return int((end - start).total_seconds()) if start and end else None
+
+
+async def sync_cardio_load(session: Session, client: DailyClient) -> dict[str, int]:
+    endpoint = "/v3/users/cardio-load"
+    rows = await client.get(endpoint)
+    return _sync_rows(session, rows, endpoint, _upsert_cardio_load)
+
+
+def _upsert_cardio_load(session: Session, payload: dict[str, Any], endpoint: str) -> str:
+    load_date = date.fromisoformat(required_string(payload, "date"))
+    raw, changed = _raw_payload(session, endpoint, load_date.isoformat(), payload)
+    existing = session.query(PolarCardioLoad).filter_by(load_date=load_date).one_or_none()
+    if existing and not changed:
+        return "skipped"
+    values = {
+        "strain": float_or_none(payload.get("strain")),
+        "tolerance": float_or_none(payload.get("tolerance")),
+        "raw_payload_id": raw.id,
+    }
+    if existing is None:
+        session.add(PolarCardioLoad(load_date=load_date, **values))
+        return "inserted"
+    for key, value in values.items():
+        setattr(existing, key, value)
+    return "updated"

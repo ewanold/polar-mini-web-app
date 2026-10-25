@@ -1,6 +1,7 @@
 from polar_app.models.base import Base
 from polar_app.models.polar import (
     PolarActivityDay,
+    PolarCardioLoad,
     PolarHeartRateSample,
     PolarNightlyRecharge,
     PolarOAuthToken,
@@ -15,6 +16,7 @@ from polar_app.models.training_groups import PolarSportTypeMapping, TrainingGrou
 __all__ = [
     "Base",
     "PolarActivityDay",
+    "PolarCardioLoad",
     "PolarHeartRateSample",
     "PolarNightlyRecharge",
     "PolarOAuthToken",

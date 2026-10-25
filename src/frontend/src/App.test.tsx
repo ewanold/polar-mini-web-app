@@ -6,7 +6,7 @@ import App from "./App";
 
 describe("application shell", () => {
   beforeEach(() => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => [] }));
+    vi.stubGlobal("fetch", vi.fn(async (url: RequestInfo | URL) => ({ ok: true, json: async () => String(url).startsWith("/api/training/cardio-load") ? { start: "2026-09-01", end: "2026-09-28", synced_through: null, days: [] } : [] })));
   });
 
   it("redirects the root route to the timeline", async () => {

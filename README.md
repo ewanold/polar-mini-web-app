@@ -24,6 +24,8 @@ For these reasons, I decided to put my Codex account to good use and have an age
 
 - **Training** shows summaries of training sessions: distance, average heart rate, average pace, duration, and an additional index that divides duration by pace.
 
+  Below these charts, **Cardio load** compares Polar’s **Strain (7 days)** and **Tolerance (28 days)** in one chart. These values describe overall training load, independent of the selected training group.
+
   ![Training](screenshots/training.png)
 
 - **Timeline** shows daily heart-rate activity and values based on sleep data.
@@ -64,6 +66,7 @@ A private, self-hosted dashboard for importing Polar AccessLink data and reviewi
 - Syncs Polar data automatically every hour and supports manual sync.
 - Shows a Timeline with nightly HRV, heart rate, respiration, ANS charge, Nightly Recharge, and a rolling 24-hour continuous-heart-rate chart when Polar provides the data.
 - Shows Training Progress charts for user-defined sport groups: distance, heart rate, pace, duration, and duration/pace index.
+- Shows Polar’s daily cardio load as Strain (7 days) and Tolerance (28 days), measured in TRIMP.
 - Supports English, German, and Russian plus light/dark themes.
 - Stores all local data in SQLite under `database/`.
 
@@ -114,6 +117,7 @@ The complete, GitHub-safe setup guide is [AI/POLAR_AUTH_SETUP.md](AI/POLAR_AUTH_
 - Map observed Polar sport types to that group, or leave them unmapped/ignored.
 - Open **Training** and choose the group and range (`4 weeks`, `6 months`, or `All`).
 - Hover synchronized charts for values; select a bucket to inspect contributing sessions.
+- The **Cardio load** chart below the group charts compares Polar’s Strain (7 days) and Tolerance (28 days). It follows the selected date range and shows daily values across all training groups. Sync Polar data in **Settings** to import available values; no training-group mapping is required.
 
 ### Settings
 

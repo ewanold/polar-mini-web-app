@@ -27,6 +27,7 @@ type SyncResult = {
 
 const categoryKeys: Partial<Record<string, TranslationKey>> = {
   activity: "categoryActivity",
+  cardio_load: "cardioLoad",
   continuous_heart_rate: "categoryContinuousHeartRate",
   nightly_recharge: "categoryNightlyRecharge",
   sleep: "categorySleep",

@@ -133,3 +133,13 @@ class TimelineEvent(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     event_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     description: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class PolarCardioLoad(Base):
+    __tablename__ = "polar_cardio_load"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    load_date: Mapped[date] = mapped_column(Date, unique=True, nullable=False)
+    strain: Mapped[float | None] = mapped_column(Float)
+    tolerance: Mapped[float | None] = mapped_column(Float)
+    raw_payload_id: Mapped[int] = mapped_column(ForeignKey("polar_raw_payloads.id"))
