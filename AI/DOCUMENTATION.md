@@ -25,6 +25,7 @@ When the user asks to update, refresh, or synchronize the project documentation:
 - `DATA_MODEL.md` — persistence, schema, raw payload retention, training mappings, aggregate formulas, migrations, and backups.
 - `UI.md` — timeline and training-chart behavior, mapping interface, visual references, accessibility, and light/dark themes.
 - `DEPLOYMENT.md` — native and Docker startup, home-server configuration, scheduler behavior, storage, networking, backups, upgrades, and security.
+- `HANDOVER.md` — latest checkpoint, recorded validation limits, and immediate resumption steps.
 - `TODOS.md` — concise current work queue and unresolved tasks; update it as implementation progresses rather than duplicating the full plan.
 - `LOG.md` — dated record of important decisions and meaningful project milestones. Keep entries short and factual.
 - `LINKS.md` — external references and short notes explaining why each link matters.

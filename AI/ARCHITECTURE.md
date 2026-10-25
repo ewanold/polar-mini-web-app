@@ -63,7 +63,7 @@ Only the Python backend accesses SQLite. The browser obtains and changes data th
 The long-running Python service is the core application. It is responsible for:
 
 - Polar OAuth authorization-code flow, encrypted access-token storage, and Polar user registration
-- Scheduled and manually triggered Polar synchronization across training, sleep, Nightly Recharge, activity, and continuous heart-rate categories
+- Scheduled and manually triggered Polar synchronization across training, sleep, Nightly Recharge, activity, continuous heart-rate, and cardio-load categories
 - Request timeouts, rate-limit handling, retry/backoff, and error reporting
 - Storage of raw API payloads
 - Normalization into stable domain tables
@@ -111,6 +111,8 @@ Primary frontend technologies:
 - React Router
 - React Hook Form and Zod
 - CSS custom properties for themes
+
+Cardio load is served separately by `GET /api/training/cardio-load?range=4w|6m|all`. It reads normalized daily Polar strain/tolerance records without training-group filtering or weekly/monthly aggregation. The Training page renders it below the five group panels.
 
 ## Build Boundary
 

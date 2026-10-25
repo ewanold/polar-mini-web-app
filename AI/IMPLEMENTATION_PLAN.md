@@ -10,6 +10,10 @@
 
 ---
 
+## Current Implementation Checkpoint (2026-10-25)
+
+Training Progress also includes an independent daily cardio-load chart for Polar strain (7 days) and tolerance (28 days). Schema revision `0011`, regular import, range-aware API, translations, and README guidance are implemented. This chart follows the selected range without using sport-group aggregation. Latest validation limits and next actions are in [HANDOVER.md](HANDOVER.md); historical unchecked release tasks below remain pending unless separately verified.
+
 ## 1. Confirmed Product Decisions
 
 - [x] The application is a local/self-hosted browser application, not a desktop executable.
@@ -696,6 +700,7 @@ PATCH  /api/training/groups/{id}
 DELETE /api/training/groups/{id}
 GET    /api/training/polar-types
 PUT    /api/training/polar-types/{polar_type}/mapping
+GET    /api/training/cardio-load?range=4w|6m|all
 GET    /api/training/groups/{id}/series?range=4w|6m|all
 GET    /api/training/groups/{id}/sessions?from=...&to=...
 

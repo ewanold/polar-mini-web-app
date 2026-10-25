@@ -108,3 +108,5 @@ Open questions:
 - Verified all 22 frontend tests, TypeScript, ESLint, production build, focused backend cardio/Timeline/migration tests, and changed-file Ruff. The full backend suite has 53 passing tests and one pre-existing date-dependent Training API expectation (September fixture versus current October). In-app browser inspection was unavailable in this session.
 
 - Corrected chart placement to the Training page following user clarification, removed the Timeline UI/API additions, and made cardio load follow the Training range controls independently of training group.
+
+- Prepared the closing checkpoint: synchronized MAIN, architecture, implementation plan/API outline, TODOs, and documentation navigation; added `HANDOVER.md` with cardio-load behavior, recorded validation limits, launcher usage, and next steps. README now covers cardio load in the tour, features, and user guide. No deployment or live-data changes were performed for this documentation checkpoint.

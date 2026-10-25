@@ -2,6 +2,15 @@
 
 The complete ordered implementation checklist is in `IMPLEMENTATION_PLAN.md`. This file is the concise current work queue and should change as work progresses.
 
+## Latest Checkpoint: 2026-10-25
+
+- [x] Add Training cardio load (Polar strain/tolerance), schema revision `0011`, regular synchronization, range-aware API, translations, and README coverage.
+- [x] Adapt `codex-resume.sh` to hostname-specific sessions, including `optiplex-3060-3`; verify syntax, working directory, and argument forwarding with a mock command.
+- [ ] Make the date-dependent Training API test deterministic (September fixture versus current October); the recorded full backend run had 53 passes and one failure.
+- [ ] Visually verify the final Training cardio-load placement and range behavior in a controllable browser.
+
+See [HANDOVER.md](HANDOVER.md) for validation scope and resumption.
+
 ## Pending Release Work
 
 1. **End-to-end coverage:** add deterministic browser tests for OAuth-safe connection states, sync, mappings, Training, Timeline events, theme persistence, and restart persistence.

@@ -36,6 +36,10 @@ Python is the long-running application runtime. TypeScript is compiled into stat
 
 The production build is one browser-accessible web service. It should start reproducibly from the project root one level above this `AI/` directory, run later on a home server, synchronize Polar data at configurable intervals, and keep all mutable application data under `database/`.
 
+## Current Checkpoint
+
+Cardio load is implemented on Training Progress below the five group charts. It compares Polar-provided strain (7 days) and tolerance (28 days), independently of sport mappings, using daily values for every selected range. See [HANDOVER.md](HANDOVER.md) for the latest checkpoint, validation limits, and next steps.
+
 ## Durable Decisions
 
 - Use the official Polar AccessLink API; do not scrape Polar Flow.
@@ -58,6 +62,7 @@ The production build is one browser-accessible web service. It should start repr
 - `DATA_MODEL.md` — persistence, schema outline, raw payloads, mapping, and aggregate rules.
 - `UI.md` — daily timeline, training charts, mapping interface, visual references, and themes.
 - `DEPLOYMENT.md` — startup, storage, scheduler, networking, backups, and security.
+- `HANDOVER.md` — latest resumable checkpoint, validation limits, and next actions.
 - `TODOS.md` — concise current work queue.
 - `LOG.md` — dated decisions and meaningful milestones.
 - `LINKS.md` — primary external references and library links.
